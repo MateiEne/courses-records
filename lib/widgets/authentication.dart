@@ -1,7 +1,13 @@
+import 'package:db_homework/screens/register.dart';
 import 'package:flutter/material.dart';
 
 class AuthenticationScreen extends StatelessWidget {
-  const AuthenticationScreen({Key? key}) : super(key: key);
+  const AuthenticationScreen({
+    Key? key,
+    required this.onSelectContent,
+  }) : super(key: key);
+
+  final void Function() onSelectContent;
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +15,7 @@ class AuthenticationScreen extends StatelessWidget {
     final TextEditingController _userPassword = TextEditingController();
 
     return Card(
-      color: Theme.of(context).colorScheme.onPrimaryContainer,
+      color: Theme.of(context).colorScheme.onSurface,
       elevation: 3,
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -58,7 +64,17 @@ class AuthenticationScreen extends StatelessWidget {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return RegisterScreen(
+                            onSelectContent: onSelectContent,
+                          );
+                        },
+                      ),
+                    );
+                  },
                   child: Text(
                     'Register',
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
