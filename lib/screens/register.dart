@@ -1,18 +1,24 @@
+import 'package:db_homework/screens/home.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({
     Key? key,
-    required this.onSelectContent,
   }) : super(key: key);
-
-  final void Function() onSelectContent;
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: _firstNameController,
                       decoration: InputDecoration(
                         hintText: 'First name',
                         hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
@@ -46,6 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   Expanded(
                     child: TextField(
+                      controller: _lastNameController,
                       decoration: InputDecoration(
                         hintText: 'Last name',
                         hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
@@ -64,12 +72,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Expanded(
                     flex: 2,
                     child: TextField(
+                      controller: _emailController,
                       decoration: InputDecoration(
                         hintText: 'email',
                         hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: Theme.of(context).colorScheme.secondaryContainer,
                             ),
+                        errorText: null,
+                        errorStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: Theme.of(context).colorScheme.errorContainer,
+                            ),
                       ),
+                      keyboardType: TextInputType.emailAddress,
                     ),
                   ),
                   const SizedBox(
@@ -78,12 +92,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Expanded(
                     flex: 1,
                     child: TextField(
+                      controller: _phoneNumberController,
                       decoration: InputDecoration(
                         hintText: 'Phone number',
                         hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: Theme.of(context).colorScheme.secondaryContainer,
                             ),
                       ),
+                      keyboardType: TextInputType.number,
                     ),
                   ),
                 ],
@@ -92,6 +108,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 height: 24,
               ),
               TextField(
+                controller: _usernameController,
                 decoration: InputDecoration(
                   hintText: 'Username',
                   hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
@@ -103,6 +120,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 height: 8,
               ),
               TextField(
+                controller: _passwordController,
                 decoration: InputDecoration(
                   hintText: 'Password',
                   hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
@@ -115,6 +133,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 height: 8,
               ),
               TextField(
+                controller: _confirmPasswordController,
                 decoration: InputDecoration(
                   hintText: 'Confirm password',
                   hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
@@ -130,7 +149,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 onPressed: () {
                   Navigator.of(context).pop();
 
-                  widget.onSelectContent();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return const HomeScreen();
+                      },
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.secondaryContainer,

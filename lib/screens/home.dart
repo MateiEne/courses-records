@@ -1,4 +1,5 @@
-import 'package:db_homework/widgets/authentication.dart';
+import 'package:db_homework/data_base/data_base_helper.dart';
+import 'package:db_homework/models/course.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,66 +12,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String contentValue = '';
+  final DatabaseHelper db = DatabaseHelper.instance;
 
-  void _selectContent() {
+  List<Course> courses = [];
+
+  Future<void> initCourses() async {
+    List<Course> result = await db.getAllCourses();
+
     setState(() {
-      contentValue = 'Home';
+      courses = result;
     });
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    initCourses();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Widget content = Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          textAlign: TextAlign.center,
-          'Welcome to our app! Please login!',
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-        ),
-        Text(
-          'If you do not have an account, please register!',
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(
-          height: 50,
-        ),
-        AuthenticationScreen(
-          onSelectContent: _selectContent,
-        ),
-      ],
-    );
-
-    if (contentValue == 'Home') {
-      content = ListView(
-        children: [
-          Text(
-            textAlign: TextAlign.center,
-            'Welcome to our app! Please login!',
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-          ),
-          Text(
-            'If you do not have an account, please register!',
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(
-            height: 50,
-          ),
-        ],
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -78,7 +40,17 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
       ),
-      body: content,
+      body: ListView.builder(
+        itemCount: courses.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            title: Text(courses[index].title),
+            subtitle: Text(
+              courses[index].description ?? '',
+            ),
+          );
+        },
+      ),
     );
   }
 }

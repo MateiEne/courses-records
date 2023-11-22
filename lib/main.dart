@@ -1,4 +1,7 @@
+import 'package:db_homework/data_base/data_base_helper.dart';
+import 'package:db_homework/models/course.dart';
 import 'package:db_homework/screens/home.dart';
+import 'package:db_homework/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,18 +14,36 @@ final theme = ThemeData(
   textTheme: GoogleFonts.latoTextTheme(),
 );
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  DatabaseHelper db = DatabaseHelper.instance;
+
+  Course course = Course(
+    id: 0,
+    title: 'title',
+    description: 'description',
+    date: DateTime
+        .now()
+        .microsecondsSinceEpoch,
+    duration: 2,
+  );
+
+  //await db.insertCourse(course, 0, 0);
+
   runApp(const App());
 }
 
 class App extends StatelessWidget {
-  const App({super.key});
+  const App
+
+  ({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: theme,
-      home: const HomeScreen(),
+      home: const LoginScreen(),
     );
   }
 }

@@ -1,13 +1,15 @@
 import 'package:db_homework/screens/register.dart';
 import 'package:flutter/material.dart';
 
-class AuthenticationScreen extends StatelessWidget {
-  const AuthenticationScreen({
+class AuthenticationWidget extends StatelessWidget {
+  const AuthenticationWidget({
     Key? key,
-    required this.onSelectContent,
+    required this.onLogin,
+    required this.onRegister,
   }) : super(key: key);
 
-  final void Function() onSelectContent;
+  final void Function() onLogin;
+  final void Function() onRegister;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +57,7 @@ class AuthenticationScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: onLogin,
                   child: Text(
                     'Login',
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -64,17 +66,7 @@ class AuthenticationScreen extends StatelessWidget {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return RegisterScreen(
-                            onSelectContent: onSelectContent,
-                          );
-                        },
-                      ),
-                    );
-                  },
+                  onPressed: onRegister,
                   child: Text(
                     'Register',
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
