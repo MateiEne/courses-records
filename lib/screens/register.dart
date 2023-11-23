@@ -1,3 +1,5 @@
+import 'package:db_homework/data_base/data_base_helper.dart';
+import 'package:db_homework/models/student.dart';
 import 'package:db_homework/screens/home.dart';
 import 'package:flutter/material.dart';
 
@@ -19,14 +21,97 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
+  String? _emailError;
+  String? _confirmPasswordError;
+  String? _allFieldsCompletedError;
+
+  bool _isValidRegistration() {
+    if (_firstNameController.text.trim().isEmpty ||
+        _lastNameController.text.trim().isEmpty ||
+        _emailController.text.trim().isEmpty ||
+        _phoneNumberController.text.trim().isEmpty ||
+        _usernameController.text.trim().isEmpty ||
+        _passwordController.text.trim().isEmpty ||
+        _confirmPasswordController.text.trim().isEmpty) {
+      setState(() {
+        _allFieldsCompletedError = 'Please complete all the fields!';
+      });
+
+      return false;
+    }
+
+    if (_emailError != null) {
+      setState(() {
+        _allFieldsCompletedError = null;
+      });
+
+      return false;
+    }
+
+    if (_confirmPasswordError != null) {
+      setState(() {
+        _allFieldsCompletedError = null;
+      });
+
+      return false;
+    }
+
+    return true;
+  }
+
+  void _registerButtonPressed() {
+    if (_isValidRegistration()) {
+      _insertUser();
+
+      Navigator.of(context).pop();
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return const HomeScreen();
+          },
+        ),
+      );
+    }
+  }
+
+  void _insertUser() async {
+    DatabaseHelper database = DatabaseHelper.instance;
+
+    database.insertStudent(
+      Student(
+        id: 5,
+        firstName: _firstNameController.text,
+        lastName: _lastNameController.text,
+        email: _emailController.text,
+        phoneNumber: _phoneNumberController.text,
+        password: _passwordController.text,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _phoneNumberController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
       ),
-      body: Container(
-        color: Theme.of(context).colorScheme.onBackground,
+      backgroundColor: Theme.of(context).colorScheme.onBackground,
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 8,
@@ -78,12 +163,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: Theme.of(context).colorScheme.secondaryContainer,
                             ),
-                        errorText: null,
+                        errorText: _emailError,
                         errorStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: Theme.of(context).colorScheme.errorContainer,
                             ),
                       ),
                       keyboardType: TextInputType.emailAddress,
+                      onChanged: (text) {
+                        if (!text.contains('@')) {
+                          setState(() {
+                            _emailError = 'Please enter a valid email!';
+                          });
+                        } else {
+                          setState(() {
+                            _emailError = null;
+                          });
+                        }
+                      },
                     ),
                   ),
                   const SizedBox(
@@ -139,33 +235,57 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: Theme.of(context).colorScheme.secondaryContainer,
                       ),
+                  errorText: _confirmPasswordError,
+                  errorStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: Theme.of(context).colorScheme.errorContainer,
+                      ),
                 ),
                 obscureText: true,
+                onChanged: (text) {
+                  if (_confirmPasswordController.text != _passwordController.text) {
+                    setState(() {
+                      _confirmPasswordError = 'Passwords do not match!';
+                    });
+                  } else {
+                    setState(() {
+                      _confirmPasswordError = null;
+                    });
+                  }
+                },
               ),
               const SizedBox(
                 height: 8,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) {
-                        return const HomeScreen();
-                      },
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-                ),
-                child: Text(
-                  'Register',
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  _allFieldsCompletedError == null
+                      ? const Expanded(
+                          child: SizedBox.shrink(),
+                        )
+                      : Expanded(
+                          child: Text(
+                            _allFieldsCompletedError!,
+                            style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                                  color: Theme.of(context).colorScheme.errorContainer,
+                                ),
+                          ),
+                        ),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _registerButtonPressed,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                       ),
-                ),
+                      child: Text(
+                        'Register',
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.onPrimaryContainer,
+                            ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

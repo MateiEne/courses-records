@@ -29,7 +29,9 @@ void main() async {
     duration: 2,
   );
 
-  //await db.insertCourse(course, 0, 0);
+  await db.insertCourse(course, 0, 0);
+
+  await db.printDatabase();
 
   runApp(const App());
 }

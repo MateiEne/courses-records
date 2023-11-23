@@ -124,6 +124,16 @@ class DatabaseHelper {
   Future<int> insertCourse(Course course, int categoryID, int teacherID) async {
     final db = await database;
 
+    final List<Map<String, Object?>> result = await db.rawQuery('''
+      SELECT * FROM $_COURSES_TABLE
+      WHERE id = ${course.id}
+    ''');
+
+    if (result.isNotEmpty) {
+      // TODO: update the db with the new value
+      return 0;
+    }
+
     return await db.rawInsert('''
       INSERT INTO $_COURSES_TABLE(id, title, description, date, duration, categoryID, teacherID)
       VALUES ("${course.id}", "${course.title}", "${course.description}", "${course.date}", "${course.duration}", "$categoryID", "$teacherID")
@@ -143,5 +153,29 @@ class DatabaseHelper {
     List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM $_STUDENTS_TABLE WHERE id = $id');
 
     return Student.fromMap(result.first);
+  }
+
+  Future<List<Student>> getAllStudents() async {
+    final db = await database;
+    List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM $_STUDENTS_TABLE');
+
+    return result.map((res) => Student.fromMap(res)).toList();
+  }
+
+  Future<void> printDatabase() async {
+    final db = await database;
+
+    final List<Student> students = await getAllStudents();
+    final List<Course> courses = await getAllCourses();
+
+    print('------------------COURSES-----------------');
+    for (Course course in courses) {
+      print(course.title);
+    }
+
+    print('-------------------STUDENTS----------------');
+    for (Student student in students) {
+      print(student.firstName);
+    }
   }
 }
