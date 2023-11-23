@@ -1,5 +1,6 @@
 import 'package:db_homework/data_base/data_base_helper.dart';
 import 'package:db_homework/models/course.dart';
+import 'package:db_homework/screens/login.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -39,6 +40,17 @@ class _HomeScreenState extends State<HomeScreen> {
           'Tema Baze de date',
         ),
         centerTitle: true,
+        actions: [
+          IconButton(onPressed: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return const LoginScreen();
+                },
+              ),
+            );
+          }, icon: Icon(Icons.logout)),
+        ],
       ),
       body: ListView.builder(
         itemCount: courses.length,

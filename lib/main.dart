@@ -18,26 +18,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   DatabaseHelper db = DatabaseHelper.instance;
-
-  Course course = Course(
-    id: 0,
-    title: 'title',
-    description: 'description',
-    date: DateTime
-        .now()
-        .microsecondsSinceEpoch,
-    duration: 2,
-  );
-
-  await db.insertCourse(course, 0, "ene.matei@email.com");
+  await db.database;
 
   runApp(const App());
 }
 
 class App extends StatelessWidget {
-  const App
-
-  ({super.key});
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {

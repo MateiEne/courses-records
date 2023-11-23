@@ -1,21 +1,29 @@
 import 'package:db_homework/screens/register.dart';
 import 'package:flutter/material.dart';
 
-class AuthenticationWidget extends StatelessWidget {
+class AuthenticationWidget extends StatefulWidget {
   const AuthenticationWidget({
     Key? key,
     required this.onLogin,
     required this.onRegister,
   }) : super(key: key);
 
-  final void Function() onLogin;
+  final void Function(String email, String password) onLogin;
   final void Function() onRegister;
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController _userNameController = TextEditingController();
-    final TextEditingController _userPassword = TextEditingController();
+  State<AuthenticationWidget> createState() => _AuthenticationWidgetState();
+}
 
+class _AuthenticationWidgetState extends State<AuthenticationWidget> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  String? _emailError;
+  String? _passwordError;
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
       color: Theme.of(context).colorScheme.onSurface,
       elevation: 3,
@@ -29,26 +37,50 @@ class AuthenticationWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
-              controller: _userNameController,
+              controller: _emailController,
               decoration: InputDecoration(
-                hintText: 'username',
+                hintText: 'email',
                 hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: Theme.of(context).colorScheme.secondaryContainer,
                     ),
+                errorText: _emailError,
+                errorStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: Theme.of(context).colorScheme.errorContainer,
+                    ),
               ),
+              onChanged: (text) {
+                if (!text.contains('@')) {
+                  setState(() {
+                    _emailError = 'Please enter a valid email';
+                  });
+                } else {
+                  setState(() {
+                    _emailError = null;
+                  });
+                }
+              },
             ),
             const SizedBox(
               height: 8,
             ),
             TextField(
-              controller: _userPassword,
+              controller: _passwordController,
               decoration: InputDecoration(
                 hintText: 'password',
                 hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: Theme.of(context).colorScheme.secondaryContainer,
                     ),
+                errorText: _passwordError,
+                errorStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: Theme.of(context).colorScheme.errorContainer,
+                    ),
               ),
               obscureText: true,
+              onChanged: (text) {
+                if (text.isNotEmpty) {
+                  _passwordError = null;
+                }
+              },
             ),
             const SizedBox(
               height: 8,
@@ -57,7 +89,25 @@ class AuthenticationWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
-                  onPressed: onLogin,
+                  onPressed: () {
+                    if (_emailController.text.trim().isEmpty) {
+                      setState(() {
+                        _emailError = 'Please enter an email!';
+                      });
+
+                      return;
+                    }
+
+                    if (_passwordController.text.trim().isEmpty) {
+                      setState(() {
+                        _passwordError = 'Please enter your password!';
+                      });
+
+                      return;
+                    }
+
+                    widget.onLogin(_emailController.text.trim(), _passwordController.text.trim());
+                  },
                   child: Text(
                     'Login',
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -66,7 +116,7 @@ class AuthenticationWidget extends StatelessWidget {
                   ),
                 ),
                 TextButton(
-                  onPressed: onRegister,
+                  onPressed: widget.onRegister,
                   child: Text(
                     'Register',
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
