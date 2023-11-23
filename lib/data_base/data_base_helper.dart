@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
 import 'package:db_homework/models/student.dart';
@@ -31,11 +33,11 @@ class DatabaseHelper {
     final path = await getDatabasesPath();
     final databasePath = '$path/$_DATABASE_NAME';
 
-    return await openDatabase(
-      databasePath,
-      version: 1,
-      onCreate: _onCreate,
-    );
+    return await openDatabase(databasePath, version: 1, onCreate: _onCreate, onConfigure: _onConfigure);
+  }
+
+  FutureOr<void> _onConfigure(Database db) async {
+    await db.execute('PRAGMA foreign_keys = ON');
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -46,7 +48,8 @@ class DatabaseHelper {
         title TEXT NOT NULL,
         description TEXT,
         coursesNumber INTEGER,
-        maxStudentsNumber INTEGER
+        maxStudentsNumber INTEGER,
+        imageUrl TEXT NOT NULL
       )
     ''');
 

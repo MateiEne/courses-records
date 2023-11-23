@@ -4,6 +4,7 @@ class Category {
   final String? description;
   final int? coursesNumber;
   final int? maxStudentsNumber;
+  final String imageUrl;
 
   Category({
     required this.id,
@@ -11,6 +12,7 @@ class Category {
     required this.description,
     required this.coursesNumber,
     required this.maxStudentsNumber,
+    required this.imageUrl,
   });
 
   Category.fromMap(Map<String, dynamic> map)
@@ -18,7 +20,8 @@ class Category {
         title = map['title'],
         description = map['description'],
         coursesNumber = map['coursesNumber'],
-        maxStudentsNumber = map['maxStudentsNumber'];
+        maxStudentsNumber = map['maxStudentsNumber'],
+        imageUrl = map['imageUrl'];
 
   Map<String, dynamic> toMap() {
     return {
@@ -27,6 +30,7 @@ class Category {
       "description": description,
       "coursesNumber": coursesNumber,
       "maxStudentsNumber": maxStudentsNumber,
+      "imageUrl": imageUrl,
     };
   }
 }
