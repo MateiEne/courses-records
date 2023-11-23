@@ -29,7 +29,7 @@ void main() async {
     duration: 2,
   );
 
-  await db.insertCourse(course, 0, 0);
+  await db.insertCourse(course, 0, "ene.matei@email.com");
 
   runApp(const App());
 }

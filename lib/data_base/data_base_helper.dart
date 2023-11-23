@@ -41,7 +41,7 @@ class DatabaseHelper {
     // Create the categories table
     await db.execute('''
       CREATE TABLE $_CATGORIES_TABLE(
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         description TEXT,
         coursesNumber INTEGER,
@@ -52,10 +52,9 @@ class DatabaseHelper {
     // Create the teachers table
     await db.execute('''
       CREATE TABLE $_TEACHERS_TABLE(
-        id INTEGER PRIMARY KEY,
+        email TEXT NOT NULL PRIMARY KEY,
         firstName TEXT NOT NULL,
         lastName TEXT NOT NULL,
-        email TEXT NOT NULL,
         phoneNumber TEXT NOT NULL,
         password TEXT NOT NULL
       )
@@ -64,15 +63,15 @@ class DatabaseHelper {
     // Create the courses table
     await db.execute('''
       CREATE TABLE $_COURSES_TABLE(
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         description TEXT,
         date INTEGER NOT NULL,
         duration FLOAT NOT NULL,
         categoryID INTEGER NOT NULL,
-        teacherID INTEGER NOT NULL,
+        teacherEmail TEXT NOT NULL,
         FOREIGN KEY (categoryID) REFERENCES $_CATGORIES_TABLE(id),
-        FOREIGN KEY (teacherID) REFERENCES $_TEACHERS_TABLE(id)
+        FOREIGN KEY (teacherEmail) REFERENCES $_TEACHERS_TABLE(email)
       )
     ''');
 
@@ -93,19 +92,19 @@ class DatabaseHelper {
         id INTEGER PRIMARY KEY,
         date INTEGER NOT NULL,
         price FLOAT NOT NULL,
-        studentID INTEGER NOT NULL,
-        FOREIGN KEY (studentID) REFERENCES $_STUDENTS_TABLE(id)
+        studentEmail TEXT NOT NULL,
+        FOREIGN KEY (studentEmail) REFERENCES $_STUDENTS_TABLE(email)
       )
     ''');
 
     // Create the courses_records table
     await db.execute('''
       CREATE TABLE $_COURSES_RECORDS_TABLE(
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         grade FLOAT NOT NULL,
-        studentID INTEGER NOT NULL,
+        studentEmail TEXT NOT NULL,
         courseID INTEGER NOT NULL,
-        FOREIGN KEY (studentID) REFERENCES $_STUDENTS_TABLE(id),
+        FOREIGN KEY (studentEmail) REFERENCES $_STUDENTS_TABLE(email),
         FOREIGN KEY (courseID) REFERENCES $_COURSES_TABLE(id)
       )
     ''');
@@ -120,7 +119,7 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<int> insertCourse(Course course, int categoryID, int teacherID) async {
+  Future<int> insertCourse(Course course, int categoryID, String teacherEmail) async {
     final db = await database;
 
     final List<Map<String, Object?>> result = await db.rawQuery('''
@@ -134,8 +133,8 @@ class DatabaseHelper {
     }
 
     return await db.rawInsert('''
-      INSERT INTO $_COURSES_TABLE(id, title, description, date, duration, categoryID, teacherID)
-      VALUES ("${course.id}", "${course.title}", "${course.description}", ${course.date}, ${course.duration}, $categoryID, $teacherID)
+      INSERT INTO $_COURSES_TABLE(title, description, date, duration, categoryID, teacherEmail)
+      VALUES ("${course.title}", "${course.description}", ${course.date}, ${course.duration}, $categoryID, "$teacherEmail")
     ''');
   }
 
