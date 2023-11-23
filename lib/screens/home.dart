@@ -1,4 +1,5 @@
 import 'package:db_homework/data_base/data_base_helper.dart';
+import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
 import 'package:db_homework/screens/login.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +16,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final DatabaseHelper db = DatabaseHelper.instance;
 
-  List<Course> courses = [];
+  List<Category> categories = [];
 
-  Future<void> initCourses() async {
-    List<Course> result = await db.getAllCourses();
+  Future<void> initCategories() async {
+    List<Category> result = await db.getAllCategories();
 
     setState(() {
-      courses = result;
+      categories = result;
     });
   }
 
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    initCourses();
+    initCategories();
   }
 
   @override
@@ -53,12 +54,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: ListView.builder(
-        itemCount: courses.length,
+        itemCount: categories.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
-            title: Text(courses[index].title),
+            title: Text(categories[index].title),
             subtitle: Text(
-              courses[index].description ?? '',
+              categories[index].description ?? '',
             ),
           );
         },

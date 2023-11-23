@@ -1,3 +1,4 @@
+import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
 import 'package:db_homework/models/student.dart';
 import 'package:sqflite/sqflite.dart';
@@ -136,6 +137,24 @@ class DatabaseHelper {
       INSERT INTO $_COURSES_TABLE(title, description, date, duration, categoryID, teacherEmail)
       VALUES ("${course.title}", "${course.description}", ${course.date}, ${course.duration}, $categoryID, "$teacherEmail")
     ''');
+  }
+
+  Future<Category?> getCategory({required int id}) async {
+    final db = await database;
+    final List<Map<String, Object?>> result = await db.rawQuery('SELECT * FROM $_CATGORIES_TABLE WHERE id = $id');
+
+    if (result.isEmpty) {
+      return null;
+    }
+
+    return Category.fromMap(result.first);
+  }
+
+  Future<List<Category>> getAllCategories() async {
+    final db = await database;
+    final List<Map<String, Object?>> result = await db.rawQuery('SELECT * FROM $_CATGORIES_TABLE');
+
+    return result.map((res) => Category.fromMap(res)).toList();
   }
 
   Future<List<Course>> getAllCourses() async {
