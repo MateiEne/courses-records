@@ -79,10 +79,9 @@ class DatabaseHelper {
     // Create the students table
     await db.execute('''
       CREATE TABLE $_STUDENTS_TABLE(
-        id INTEGER PRIMARY KEY,
+        email TEXT NOT NULL PRIMARY KEY,
         firstName TEXT NOT NULL,
         lastName TEXT NOT NULL,
-        email TEXT NOT NULL,
         phoneNumber TEXT NOT NULL,
         password TEXT NOT NULL
       )
@@ -116,8 +115,8 @@ class DatabaseHelper {
     final db = await database;
 
     return await db.rawInsert('''
-      INSERT INTO $_STUDENTS_TABLE(id, firstName, lastName, email, phoneNumber, password)
-      VALUES (${student.id}, ${student.firstName}, ${student.lastName}, ${student.email}, ${student.phoneNumber}, ${student.password})
+      INSERT INTO $_STUDENTS_TABLE(firstName, lastName, email, phoneNumber, password)
+      VALUES ("${student.firstName}", "${student.lastName}", "${student.email}", "${student.phoneNumber}", "${student.password}")
     ''');
   }
 
@@ -136,7 +135,7 @@ class DatabaseHelper {
 
     return await db.rawInsert('''
       INSERT INTO $_COURSES_TABLE(id, title, description, date, duration, categoryID, teacherID)
-      VALUES ("${course.id}", "${course.title}", "${course.description}", "${course.date}", "${course.duration}", "$categoryID", "$teacherID")
+      VALUES ("${course.id}", "${course.title}", "${course.description}", ${course.date}, ${course.duration}, $categoryID, $teacherID)
     ''');
   }
 
@@ -148,9 +147,13 @@ class DatabaseHelper {
     return result.map((courseMap) => Course.fromMap(courseMap)).toList();
   }
 
-  Future<Student> getStudent({required int id}) async {
+  Future<Student?> getStudent({required String email}) async {
     final db = await database;
-    List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM $_STUDENTS_TABLE WHERE id = $id');
+    List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM $_STUDENTS_TABLE WHERE email = "$email"');
+
+    if (result.isEmpty) {
+      return null;
+    }
 
     return Student.fromMap(result.first);
   }
@@ -160,22 +163,5 @@ class DatabaseHelper {
     List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM $_STUDENTS_TABLE');
 
     return result.map((res) => Student.fromMap(res)).toList();
-  }
-
-  Future<void> printDatabase() async {
-    final db = await database;
-
-    final List<Student> students = await getAllStudents();
-    final List<Course> courses = await getAllCourses();
-
-    print('------------------COURSES-----------------');
-    for (Course course in courses) {
-      print(course.title);
-    }
-
-    print('-------------------STUDENTS----------------');
-    for (Student student in students) {
-      print(student.firstName);
-    }
   }
 }

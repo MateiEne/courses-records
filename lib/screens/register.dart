@@ -25,7 +25,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _confirmPasswordError;
   String? _allFieldsCompletedError;
 
-  bool _isValidRegistration() {
+  Future<bool> _isValidRegistration() async {
     if (_firstNameController.text.trim().isEmpty ||
         _lastNameController.text.trim().isEmpty ||
         _emailController.text.trim().isEmpty ||
@@ -48,6 +48,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return false;
     }
 
+
+    bool emailExists = await _isEmailInDatabase(_emailController.text.trim());
+    debugPrint('emailExits = $emailExists');
+    if (emailExists) {
+      setState(() {
+        _emailError = 'email already exists!';
+      });
+
+      return false;
+    }
+
     if (_confirmPasswordError != null) {
       setState(() {
         _allFieldsCompletedError = null;
@@ -59,28 +70,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return true;
   }
 
-  void _registerButtonPressed() {
-    if (_isValidRegistration()) {
-      _insertUser();
+  Future<bool> _isEmailInDatabase(String email) async {
+    final DatabaseHelper database = DatabaseHelper.instance;
 
-      Navigator.of(context).pop();
+    Student? student = await database.getStudent(email: email);
+    debugPrint('student = ${student?.email}');
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return const HomeScreen();
-          },
-        ),
-      );
+    return student != null;
+  }
+
+  Future<void> _registerButtonPressed() async {
+    if (await _isValidRegistration()) {
+      await _insertUser();
+
+      if (context.mounted) {
+        Navigator.of(context).pop();
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return const HomeScreen();
+            },
+          ),
+        );
+      }
     }
   }
 
-  void _insertUser() async {
+  Future<void> _insertUser() async {
     DatabaseHelper database = DatabaseHelper.instance;
 
-    database.insertStudent(
+    await database.insertStudent(
       Student(
-        id: 5,
         firstName: _firstNameController.text,
         lastName: _lastNameController.text,
         email: _emailController.text,

@@ -31,8 +31,6 @@ void main() async {
 
   await db.insertCourse(course, 0, 0);
 
-  await db.printDatabase();
-
   runApp(const App());
 }
 
