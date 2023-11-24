@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               },
-              icon: Icon(Icons.logout)),
+              icon: const Icon(Icons.logout)),
         ],
       ),
       body: ListView.builder(

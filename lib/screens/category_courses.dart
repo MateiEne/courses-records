@@ -1,13 +1,42 @@
+import 'package:db_homework/data_base/data_base_helper.dart';
+import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
 import 'package:flutter/material.dart';
 
-class CategoryCourses extends StatelessWidget {
+class CategoryCourses extends StatefulWidget {
   const CategoryCourses({
     super.key,
-    required this.courses,
+    required this.category,
   });
 
-  final List<Course> courses;
+  final Category category;
+
+  @override
+  State<CategoryCourses> createState() => _CategoryCoursesState();
+}
+
+class _CategoryCoursesState extends State<CategoryCourses> {
+  List<Course> courses = [];
+
+  Future<void> _getCourses() async {
+    DatabaseHelper database = DatabaseHelper.instance;
+
+    final List<Course> result = await database.getAllCourses(
+      categoryId: widget.category.id,
+    );
+
+    setState(() {
+      courses = result;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _getCourses();
+  }
 
   @override
   Widget build(BuildContext context) {

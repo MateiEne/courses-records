@@ -13,12 +13,6 @@ class CategoryItemWidget extends StatelessWidget {
 
   final Category category;
 
-  Future<List<Course>> _getCourses() async {
-    DatabaseHelper database = DatabaseHelper.instance;
-
-    return await database.getAllCourses(categoryId: category.id);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -32,14 +26,12 @@ class CategoryItemWidget extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       elevation: 2,
       child: InkWell(
-        onTap: () async {
-          List<Course> courses = await _getCourses();
-
+        onTap: () {
           if (context.mounted) {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return CategoryCourses(courses: courses);
+                  return CategoryCourses(category: category);
                 },
               ),
             );
