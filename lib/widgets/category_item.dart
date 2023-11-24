@@ -1,4 +1,6 @@
+import 'package:db_homework/data_base/data_base_helper.dart';
 import 'package:db_homework/models/category.dart';
+import 'package:db_homework/models/course.dart';
 import 'package:db_homework/screens/category_courses.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -10,6 +12,12 @@ class CategoryItemWidget extends StatelessWidget {
   });
 
   final Category category;
+
+  Future<List<Course>> _getCourses() async {
+    DatabaseHelper database = DatabaseHelper.instance;
+
+    return await database.getAllCourses(categoryId: category.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +32,18 @@ class CategoryItemWidget extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       elevation: 2,
       child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return const CategoryCourses();
-              },
-            ),
-          );
+        onTap: () async {
+          List<Course> courses = await _getCourses();
+
+          if (context.mounted) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return CategoryCourses(courses: courses);
+                },
+              ),
+            );
+          }
         },
         splashColor: Theme.of(context).primaryColor,
         child: Stack(

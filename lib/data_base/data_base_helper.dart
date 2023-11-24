@@ -160,13 +160,13 @@ class DatabaseHelper {
     return result.map((res) => Category.fromMap(res)).toList();
   }
 
-  Future<List<Course>> getAllCourses() async {
+/*  Future<List<Course>> getAllCourses() async {
     final db = await database;
 
     List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM $_COURSES_TABLE');
 
     return result.map((courseMap) => Course.fromMap(courseMap)).toList();
-  }
+  }*/
 
   Future<Student?> getStudent({required String email}) async {
     final db = await database;
@@ -184,5 +184,13 @@ class DatabaseHelper {
     List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM $_STUDENTS_TABLE');
 
     return result.map((res) => Student.fromMap(res)).toList();
+  }
+
+  Future<List<Course>> getAllCourses({required int categoryId}) async {
+    final db = await database;
+
+    final List<Map<String, Object?>> result = await db.rawQuery('SELECT * FROM $_COURSES_TABLE WHERE categoryID = $categoryId');
+
+    return result.map((res) => Course.fromMap(res)).toList();
   }
 }
