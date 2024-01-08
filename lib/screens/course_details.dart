@@ -73,6 +73,24 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     });
   }
 
+  Future<void> _onDelete() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    await db.deleteCourse(id: widget.course.id);
+
+    Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        _isLoading = false;
+      });
+    }).then(
+      (value) {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -213,6 +231,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   ),
                   child: Text(
                     'Update',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 32,
+                ),
+                ElevatedButton(
+                  onPressed: _onDelete,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                  ),
+                  child: Text(
+                    'Delete',
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           color: Theme.of(context).colorScheme.onPrimaryContainer,
                         ),
