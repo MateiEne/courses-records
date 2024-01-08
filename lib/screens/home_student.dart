@@ -2,13 +2,17 @@ import 'package:db_homework/database/database_helper.dart';
 import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
 import 'package:db_homework/screens/login.dart';
+import 'package:db_homework/screens/profile.dart';
 import 'package:db_homework/widgets/category_item.dart';
 import 'package:flutter/material.dart';
 
 class HomeStudentScreen extends StatefulWidget {
   const HomeStudentScreen({
     Key? key,
+    required this.studentEmail,
   }) : super(key: key);
+
+  final String studentEmail;
 
   @override
   _HomeStudentScreenState createState() => _HomeStudentScreenState();
@@ -55,6 +59,21 @@ class _HomeStudentScreenState extends State<HomeStudentScreen> {
               },
               icon: const Icon(Icons.logout)),
         ],
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return ProfileScreen(
+                    email: widget.studentEmail,
+                    isTeacher: false,
+                  );
+                },
+              ),
+            );
+          },
+          icon: const Icon(Icons.person),
+        ),
       ),
       body: ListView.builder(
         itemCount: categories.length,

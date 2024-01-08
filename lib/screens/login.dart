@@ -33,8 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
           content: Text(
             'User not found!',
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-              color: Theme.of(context).colorScheme.primaryContainer,
-            ),
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                ),
           ),
         ),
       );
@@ -50,8 +50,8 @@ class _LoginScreenState extends State<LoginScreen> {
           content: Text(
             'Invalid password!',
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-              color: Theme.of(context).colorScheme.primaryContainer,
-            ),
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                ),
           ),
         ),
       );
@@ -84,8 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
           content: Text(
             'User not found!',
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-              color: Theme.of(context).colorScheme.primaryContainer,
-            ),
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                ),
           ),
         ),
       );
@@ -101,8 +101,8 @@ class _LoginScreenState extends State<LoginScreen> {
           content: Text(
             'Invalid password!',
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-              color: Theme.of(context).colorScheme.primaryContainer,
-            ),
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                ),
           ),
         ),
       );
@@ -113,7 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return const HomeStudentScreen();
+          return HomeStudentScreen(
+            studentEmail: email,
+          );
         },
       ),
     );

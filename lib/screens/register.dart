@@ -74,7 +74,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               );
             }
 
-            return const HomeStudentScreen();
+            return HomeStudentScreen(
+              studentEmail: email,
+            );
           },
         ),
       );
