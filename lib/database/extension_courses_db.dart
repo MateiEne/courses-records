@@ -1,12 +1,20 @@
 part of 'database_helper.dart';
 
 extension CoursesTableExtension on DatabaseHelper {
-  Future<int> insertCourse(Course course) async {
+  Future<int> insertCourse({
+    required String title,
+    required String description,
+    required int date,
+    required double duration,
+    required double price,
+    required int categoryId,
+    required String teacherEmail,
+  }) async {
     final db = await database;
 
     return await db.rawInsert('''
       INSERT INTO $_COURSES_TABLE(title, description, date, duration, price, categoryID, teacherEmail)
-      VALUES ("${course.title}", "${course.description}", ${course.date}, ${course.duration}, ${course.price}, ${course.categoryId}, "${course.teacherEmail}")
+      VALUES ("$title", "$description", $date, $duration, $price, $categoryId, "$teacherEmail")
     ''');
   }
 

@@ -2,6 +2,7 @@ import 'package:db_homework/database/database_helper.dart';
 import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
 import 'package:db_homework/screens/login.dart';
+import 'package:db_homework/widgets/add_course.dart';
 import 'package:db_homework/widgets/category_item.dart';
 import 'package:db_homework/widgets/course_item.dart';
 import 'package:flutter/material.dart';
@@ -60,13 +61,33 @@ class _HomeTeacherScreenState extends State<HomeTeacherScreen> {
               icon: const Icon(Icons.logout)),
         ],
       ),
-      body: ListView.builder(
-        itemCount: courses.length,
-        itemBuilder: (BuildContext context, int index) {
-          return CourseItemWidget(
-            title: courses[index].title,
-            description: courses[index].description,
-          );
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await initCourses();
+        },
+        child: ListView.builder(
+          itemCount: courses.length,
+          itemBuilder: (BuildContext context, int index) {
+            return CourseItemWidget(
+              title: courses[index].title,
+              description: courses[index].description,
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => SingleChildScrollView(
+              child: AddCourseWidget(
+                teacherEmail: widget.teacherEmail,
+              ),
+            ),
+          ).then((value) {
+            initCourses();
+          });
         },
       ),
     );
