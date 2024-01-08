@@ -1,7 +1,8 @@
 import 'package:db_homework/database/database_helper.dart';
 import 'package:db_homework/models/student.dart';
 import 'package:db_homework/models/teacher.dart';
-import 'package:db_homework/screens/home.dart';
+import 'package:db_homework/screens/home_student.dart';
+import 'package:db_homework/screens/home_teacher.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -100,7 +101,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (BuildContext context) {
-              return const HomeScreen();
+              if (_isTeacher) {
+                return HomeTeacherScreen(
+                  teacherEmail: _emailController.text.trim(),
+                );
+              }
+
+              return const HomeStudentScreen();
             },
           ),
         );
@@ -114,11 +121,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (_isTeacher) {
       await database.insertTeacher(
         Teacher(
-          firstName: _firstNameController.text,
-          lastName: _lastNameController.text,
-          email: _emailController.text,
-          phoneNumber: _phoneNumberController.text,
-          password: _passwordController.text,
+          firstName: _firstNameController.text.trim(),
+          lastName: _lastNameController.text.trim(),
+          email: _emailController.text.trim(),
+          phoneNumber: _phoneNumberController.text.trim(),
+          password: _passwordController.text.trim(),
         ),
       );
 
@@ -127,11 +134,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     await database.insertStudent(
       Student(
-        firstName: _firstNameController.text,
-        lastName: _lastNameController.text,
-        email: _emailController.text,
-        phoneNumber: _phoneNumberController.text,
-        password: _passwordController.text,
+        firstName: _firstNameController.text.trim(),
+        lastName: _lastNameController.text.trim(),
+        email: _emailController.text.trim(),
+        phoneNumber: _phoneNumberController.text.trim(),
+        password: _passwordController.text.trim(),
       ),
     );
   }

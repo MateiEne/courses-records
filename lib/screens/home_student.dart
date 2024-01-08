@@ -5,16 +5,16 @@ import 'package:db_homework/screens/login.dart';
 import 'package:db_homework/widgets/category_item.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({
+class HomeStudentScreen extends StatefulWidget {
+  const HomeStudentScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeStudentScreenState createState() => _HomeStudentScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeStudentScreenState extends State<HomeStudentScreen> {
   final DatabaseHelper db = DatabaseHelper.instance;
 
   List<Category> categories = [];

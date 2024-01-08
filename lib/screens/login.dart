@@ -1,6 +1,8 @@
 import 'package:db_homework/database/database_helper.dart';
 import 'package:db_homework/models/student.dart';
-import 'package:db_homework/screens/home.dart';
+import 'package:db_homework/models/teacher.dart';
+import 'package:db_homework/screens/home_student.dart';
+import 'package:db_homework/screens/home_teacher.dart';
 import 'package:db_homework/screens/register.dart';
 import 'package:db_homework/widgets/authentication.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +17,59 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  void _onLogin(String email, String password) async {
+  Future<void> _loginTeacher(String email, String password) async {
     final DatabaseHelper database = DatabaseHelper.instance;
+    Teacher? teacher = await database.getTeacher(email: email);
 
+    if (!context.mounted) {
+      return;
+    }
+
+    if (teacher == null) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'User not found!',
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              color: Theme.of(context).colorScheme.primaryContainer,
+            ),
+          ),
+        ),
+      );
+
+      return;
+    }
+
+    if (teacher.password != password) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Invalid password!',
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              color: Theme.of(context).colorScheme.primaryContainer,
+            ),
+          ),
+        ),
+      );
+
+      return;
+    }
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return HomeTeacherScreen(teacherEmail: teacher.email);
+        },
+      ),
+    );
+  }
+
+  Future<void> _loginStudent(String email, String password) async {
+    final DatabaseHelper database = DatabaseHelper.instance;
     Student? student = await database.getStudent(email: email);
 
     if (!context.mounted) {
@@ -32,8 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
           content: Text(
             'User not found!',
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                ),
+              color: Theme.of(context).colorScheme.primaryContainer,
+            ),
           ),
         ),
       );
@@ -49,8 +101,8 @@ class _LoginScreenState extends State<LoginScreen> {
           content: Text(
             'Invalid password!',
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                ),
+              color: Theme.of(context).colorScheme.primaryContainer,
+            ),
           ),
         ),
       );
@@ -61,10 +113,18 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return const HomeScreen();
+          return const HomeStudentScreen();
         },
       ),
     );
+  }
+
+  void _onLogin(String email, String password, bool isTeacher) async {
+    if (isTeacher) {
+      await _loginTeacher(email, password);
+    } else {
+      await _loginStudent(email, password);
+    }
   }
 
   void _onRegister() {

@@ -1,6 +1,7 @@
 import 'package:db_homework/database/database_helper.dart';
 import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
+import 'package:db_homework/widgets/course_item.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCourses extends StatefulWidget {
@@ -47,13 +48,9 @@ class _CategoryCoursesState extends State<CategoryCourses> {
       body: ListView.builder(
         itemCount: courses.length,
         itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(courses[index].title),
-            subtitle: courses[index].description == null
-                ? const SizedBox.shrink()
-                : Text(
-                    courses[index].description!,
-                  ),
+          return CourseItemWidget(
+            title: courses[index].title,
+            description: courses[index].description,
           );
         },
       ),

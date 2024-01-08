@@ -63,6 +63,15 @@ extension CoursesTableExtension on DatabaseHelper {
     return result.map((res) => Course.fromMap(res)).toList();
   }
 
+  Future<List<Course>> getAllCoursesForTeacher({required String teacherEmail}) async {
+    final db = await database;
+
+    final List<Map<String, Object?>> result =
+        await db.rawQuery('SELECT * FROM $_COURSES_TABLE WHERE teacherEmail = "$teacherEmail"');
+
+    return result.map((res) => Course.fromMap(res)).toList();
+  }
+
 /*  Future<List<Course>> getAllCourses() async {
     final db = await database;
 

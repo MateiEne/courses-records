@@ -8,7 +8,7 @@ class AuthenticationWidget extends StatefulWidget {
     required this.onRegister,
   }) : super(key: key);
 
-  final void Function(String email, String password) onLogin;
+  final void Function(String email, String password, bool isTeacher) onLogin;
   final void Function() onRegister;
 
   @override
@@ -21,6 +21,17 @@ class _AuthenticationWidgetState extends State<AuthenticationWidget> {
 
   String? _emailError;
   String? _passwordError;
+
+  bool _isTeacher = false;
+
+  final MaterialStateProperty<Icon?> _thumbIcon = MaterialStateProperty.resolveWith<Icon?>(
+    (Set<MaterialState> states) {
+      if (states.contains(MaterialState.selected)) {
+        return const Icon(Icons.check);
+      }
+      return const Icon(Icons.close);
+    },
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +97,26 @@ class _AuthenticationWidgetState extends State<AuthenticationWidget> {
               height: 8,
             ),
             Row(
+              children: [
+                const Text('Teacher'),
+                const SizedBox(
+                  width: 8,
+                ),
+                Switch(
+                  value: _isTeacher,
+                  thumbIcon: _thumbIcon,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _isTeacher = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
@@ -106,7 +137,7 @@ class _AuthenticationWidgetState extends State<AuthenticationWidget> {
                       return;
                     }
 
-                    widget.onLogin(_emailController.text.trim(), _passwordController.text.trim());
+                    widget.onLogin(_emailController.text.trim(), _passwordController.text.trim(), _isTeacher);
                   },
                   child: Text(
                     'Login',

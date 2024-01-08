@@ -26,7 +26,7 @@ class Course {
         date = map['date'],
         duration = map['duration'],
         price = map['price'],
-        categoryId = map['categoryId'],
+        categoryId = map['categoryID'],
         teacherEmail = map['teacherEmail'];
 
   Map<String, dynamic> toMap() {
@@ -37,7 +37,7 @@ class Course {
       "date": date,
       "duration": duration,
       "price": price,
-      "categoryId": categoryId,
+      "categoryID": categoryId,
       "teacherEmail": teacherEmail,
     };
   }
