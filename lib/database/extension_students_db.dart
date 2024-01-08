@@ -46,4 +46,14 @@ extension StudentsTableExtension on DatabaseHelper {
 
     return result.map((res) => Student.fromMap(res)).toList();
   }
+
+  Future<void> updateStudent(Student student) async {
+    final db = await database;
+
+    await db.rawUpdate('''
+      UPDATE $_STUDENTS_TABLE
+      SET firstName = "${student.firstName}", lastName = "${student.lastName}", phoneNumber = "${student.phoneNumber}", password = "${student.password}"
+      WHERE email = "${student.email}"
+    ''');
+  }
 }

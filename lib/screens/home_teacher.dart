@@ -66,7 +66,10 @@ class _HomeTeacherScreenState extends State<HomeTeacherScreen> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return const ProfileScreen();
+                  return ProfileScreen(
+                    email: widget.teacherEmail,
+                    isTeacher: true,
+                  );
                 },
               ),
             );

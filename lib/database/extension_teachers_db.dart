@@ -21,4 +21,14 @@ extension TeachersTableExtension on DatabaseHelper {
 
     return Teacher.fromMap(result.first);
   }
+
+  Future<void> updateTeacher(Teacher teacher) async {
+    final db = await database;
+
+    await db.rawUpdate('''
+      UPDATE $_TEACHERS_TABLE
+      SET firstName = "${teacher.firstName}", lastName = "${teacher.lastName}", phoneNumber = "${teacher.phoneNumber}", password = "${teacher.password}"
+      WHERE email = "${teacher.email}"
+    ''');
+  }
 }

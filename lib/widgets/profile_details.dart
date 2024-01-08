@@ -6,11 +6,29 @@ import 'package:flutter/material.dart';
 class ProfileDetailsWidget extends StatefulWidget {
   const ProfileDetailsWidget({
     super.key,
-    required this.onButtonPressed,
+    required this.onPrimaryButtonPressed,
+    required this.primaryButtonText,
     this.showTeacherToggle = false,
+    this.showEmailField = true,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.phoneNumber,
+    this.password,
+    this.isTeacher = false,
   });
 
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String? phoneNumber;
+  final String? password;
+  final bool isTeacher;
+
   final bool showTeacherToggle;
+  final bool showEmailField;
+
+  final String primaryButtonText;
 
   final Function(
     String firstName,
@@ -19,7 +37,7 @@ class ProfileDetailsWidget extends StatefulWidget {
     String phoneNumber,
     String password,
     bool isTeacher,
-  ) onButtonPressed;
+  ) onPrimaryButtonPressed;
 
   @override
   State<ProfileDetailsWidget> createState() => _ProfileDetailsWidgetState();
@@ -30,7 +48,6 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
@@ -54,20 +71,19 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget> {
 
     if (_isTeacher) {
       Teacher? teacher = await database.getTeacher(email: email);
-      debugPrint('teacher = ${teacher?.email}');
 
       return teacher != null;
     }
 
     Student? student = await database.getStudent(email: email);
-    debugPrint('student = ${student?.email}');
-
     return student != null;
   }
 
   Future<void> _registerButtonPressed() async {
+    print(await _isValidRegistration());
+
     if (await _isValidRegistration()) {
-      widget.onButtonPressed(
+      widget.onPrimaryButtonPressed(
         _firstNameController.text.trim(),
         _lastNameController.text.trim(),
         _emailController.text.trim(),
@@ -79,13 +95,26 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    _isTeacher = widget.isTeacher;
+
+    _firstNameController.text = widget.firstName ?? '';
+    _lastNameController.text = widget.lastName ?? '';
+    _emailController.text = widget.email ?? '';
+    _phoneNumberController.text = widget.phoneNumber ?? '';
+    _passwordController.text = widget.password ?? '';
+    _confirmPasswordController.text = widget.password ?? '';
+  }
+
+  @override
   void dispose() {
     // TODO: implement dispose
     _firstNameController.dispose();
     _lastNameController.dispose();
     _emailController.dispose();
     _phoneNumberController.dispose();
-    _usernameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
 
@@ -95,34 +124,42 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget> {
   Future<bool> _isValidRegistration() async {
     if (_firstNameController.text.trim().isEmpty ||
         _lastNameController.text.trim().isEmpty ||
-        _emailController.text.trim().isEmpty ||
         _phoneNumberController.text.trim().isEmpty ||
-        _usernameController.text.trim().isEmpty ||
         _passwordController.text.trim().isEmpty ||
         _confirmPasswordController.text.trim().isEmpty) {
       setState(() {
-        _allFieldsCompletedError = 'Please complete all the fields!';
+        _allFieldsCompletedError = 'Please complete all fields!';
       });
 
       return false;
     }
 
-    if (_emailError != null) {
+    if (widget.showEmailField && _emailController.text.trim().isEmpty) {
       setState(() {
-        _allFieldsCompletedError = null;
+        _allFieldsCompletedError = 'Please complete all fields!';
       });
 
       return false;
     }
 
-    bool emailExists = await _isEmailInDatabase(_emailController.text.trim());
-    debugPrint('emailExits = $emailExists');
-    if (emailExists) {
-      setState(() {
-        _emailError = 'email already exists!';
-      });
+    if (widget.showEmailField) {
+      if (_emailError != null) {
+        setState(() {
+          _allFieldsCompletedError = null;
+        });
 
-      return false;
+        return false;
+      }
+
+      bool emailExists = await _isEmailInDatabase(_emailController.text.trim());
+      debugPrint('emailExits = $emailExists');
+      if (emailExists) {
+        setState(() {
+          _emailError = 'email already exists!';
+        });
+
+        return false;
+      }
     }
 
     if (_confirmPasswordError != null) {
@@ -181,37 +218,39 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget> {
             ),
             Row(
               children: [
-                Expanded(
-                  flex: 2,
-                  child: TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: 'email',
-                      hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: Theme.of(context).colorScheme.secondaryContainer,
-                          ),
-                      errorText: _emailError,
-                      errorStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: Theme.of(context).colorScheme.errorContainer,
-                          ),
+                if (widget.showEmailField)
+                  Expanded(
+                    flex: 2,
+                    child: TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        hintText: 'email',
+                        hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: Theme.of(context).colorScheme.secondaryContainer,
+                            ),
+                        errorText: _emailError,
+                        errorStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: Theme.of(context).colorScheme.errorContainer,
+                            ),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      onChanged: (text) {
+                        if (!text.contains('@')) {
+                          setState(() {
+                            _emailError = 'Please enter a valid email!';
+                          });
+                        } else {
+                          setState(() {
+                            _emailError = null;
+                          });
+                        }
+                      },
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    onChanged: (text) {
-                      if (!text.contains('@')) {
-                        setState(() {
-                          _emailError = 'Please enter a valid email!';
-                        });
-                      } else {
-                        setState(() {
-                          _emailError = null;
-                        });
-                      }
-                    },
                   ),
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
+                if (widget.showEmailField)
+                  const SizedBox(
+                    width: 8,
+                  ),
                 Expanded(
                   flex: 1,
                   child: TextField(
@@ -226,18 +265,6 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget> {
                   ),
                 ),
               ],
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                hintText: 'Username',
-                hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: Theme.of(context).colorScheme.secondaryContainer,
-                    ),
-              ),
             ),
             const SizedBox(
               height: 8,
@@ -327,7 +354,7 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget> {
                       backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                     ),
                     child: Text(
-                      'Register',
+                      widget.primaryButtonText,
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             color: Theme.of(context).colorScheme.onPrimaryContainer,
                           ),

@@ -89,8 +89,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
       backgroundColor: Theme.of(context).colorScheme.onBackground,
       body: ProfileDetailsWidget(
-        onButtonPressed: _registerButtonPressed,
+        onPrimaryButtonPressed: _registerButtonPressed,
         showTeacherToggle: true,
+        primaryButtonText: 'Register',
       ),
     );
   }
