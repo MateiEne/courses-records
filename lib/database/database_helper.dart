@@ -8,9 +8,13 @@ import 'package:db_homework/models/teacher.dart';
 import 'package:sqflite/sqflite.dart';
 
 part 'extension_courses_db.dart';
+
 part 'extension_categories_db.dart';
+
 part 'extension_teachers_db.dart';
+
 part 'extension_students_db.dart';
+
 part 'extension_courses_records_db.dart';
 
 const _DATABASE_NAME = "courses_records.db";
@@ -23,7 +27,6 @@ const _REGISTRATIONS_TABLE = "registrations";
 const _COURSES_RECORDS_TABLE = "courses_records";
 
 class DatabaseHelper {
-
   DatabaseHelper._privateConstrucor();
 
   static final DatabaseHelper instance = DatabaseHelper._privateConstrucor();
@@ -42,11 +45,39 @@ class DatabaseHelper {
     final path = await getDatabasesPath();
     final databasePath = '$path/$_DATABASE_NAME';
 
-    return await openDatabase(databasePath, version: 1, onCreate: _onCreate, onConfigure: _onConfigure);
+    return await openDatabase(
+      databasePath,
+      version: 2,
+      onCreate: _onCreate,
+      onConfigure: _onConfigure,
+      onUpgrade: _onUpgrade,
+    );
   }
 
   FutureOr<void> _onConfigure(Database db) async {
     await db.execute('PRAGMA foreign_keys = ON');
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion == 1 && newVersion == 2) {
+      return await _onUpgradeV1ToV2(db);
+    }
+  }
+
+  Future<void> _onUpgradeV1ToV2(Database db) async {
+    await db.execute('''
+      ALTER TABLE $_COURSES_TABLE
+      ADD COLUMN price FLOAT NOT NULL DEFAULT 0
+    ''');
+
+    await db.execute('''
+      ALTER TABLE $_COURSES_RECORDS_TABLE
+      ADD COLUMN date INTEGER NOT NULL DEFAULT ${DateTime.now().millisecondsSinceEpoch}
+    ''');
+
+    await db.execute('''
+      DROP TABLE $_REGISTRATIONS_TABLE
+    ''');
   }
 
   Future<void> _onCreate(Database db, int version) async {

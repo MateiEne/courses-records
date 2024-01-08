@@ -1,5 +1,6 @@
 import 'package:db_homework/database/database_helper.dart';
 import 'package:db_homework/models/student.dart';
+import 'package:db_homework/models/teacher.dart';
 import 'package:db_homework/screens/home.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _confirmPasswordError;
   String? _allFieldsCompletedError;
 
+  bool _isTeacher = false;
+
+  final MaterialStateProperty<Icon?> _thumbIcon = MaterialStateProperty.resolveWith<Icon?>(
+    (Set<MaterialState> states) {
+      if (states.contains(MaterialState.selected)) {
+        return const Icon(Icons.check);
+      }
+      return const Icon(Icons.close);
+    },
+  );
+
   Future<bool> _isValidRegistration() async {
     if (_firstNameController.text.trim().isEmpty ||
         _lastNameController.text.trim().isEmpty ||
@@ -47,7 +59,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       return false;
     }
-
 
     bool emailExists = await _isEmailInDatabase(_emailController.text.trim());
     debugPrint('emailExits = $emailExists');
@@ -99,6 +110,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _insertUser() async {
     DatabaseHelper database = DatabaseHelper.instance;
+
+    if (_isTeacher) {
+      await database.insertTeacher(
+        Teacher(
+          firstName: _firstNameController.text,
+          lastName: _lastNameController.text,
+          email: _emailController.text,
+          phoneNumber: _phoneNumberController.text,
+          password: _passwordController.text,
+        ),
+      );
+
+      return;
+    }
 
     await database.insertStudent(
       Student(
@@ -273,6 +298,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     });
                   }
                 },
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Row(
+                children: [
+                  const Text('Teacher'),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Switch(
+                    value: _isTeacher,
+                    thumbIcon: _thumbIcon,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _isTeacher = value;
+                      });
+                    },
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 8,
