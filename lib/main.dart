@@ -1,6 +1,4 @@
-import 'package:db_homework/data_base/data_base_helper.dart';
-import 'package:db_homework/models/course.dart';
-import 'package:db_homework/screens/home.dart';
+import 'package:db_homework/database/database_helper.dart';
 import 'package:db_homework/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -1,4 +1,4 @@
-import 'package:db_homework/data_base/data_base_helper.dart';
+import 'package:db_homework/database/database_helper.dart';
 import 'package:db_homework/models/student.dart';
 import 'package:db_homework/screens/home.dart';
 import 'package:db_homework/screens/register.dart';

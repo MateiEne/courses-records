@@ -1,6 +1,4 @@
-import 'package:db_homework/data_base/data_base_helper.dart';
 import 'package:db_homework/models/category.dart';
-import 'package:db_homework/models/course.dart';
 import 'package:db_homework/screens/category_courses.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';

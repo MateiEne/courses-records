@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
+import 'package:db_homework/models/courseRecord.dart';
 import 'package:db_homework/models/registration.dart';
 import 'package:db_homework/models/student.dart';
 import 'package:db_homework/models/teacher.dart';
 import 'package:sqflite/sqflite.dart';
-
-import '../models/courseRecord.dart';
 
 class DatabaseHelper {
   static const _DATABASE_NAME = "courses_records.db";
