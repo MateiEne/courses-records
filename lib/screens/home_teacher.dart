@@ -2,6 +2,7 @@ import 'package:db_homework/database/database_helper.dart';
 import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
 import 'package:db_homework/screens/login.dart';
+import 'package:db_homework/screens/profile.dart';
 import 'package:db_homework/widgets/add_course.dart';
 import 'package:db_homework/widgets/category_item.dart';
 import 'package:db_homework/widgets/course_item.dart';
@@ -60,6 +61,18 @@ class _HomeTeacherScreenState extends State<HomeTeacherScreen> {
               },
               icon: const Icon(Icons.logout)),
         ],
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return const ProfileScreen();
+                },
+              ),
+            );
+          },
+          icon: const Icon(Icons.person),
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: () async {

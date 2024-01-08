@@ -55,34 +55,49 @@ class _AddCourseWidgetState extends State<AddCourseWidget> {
         children: [
           TextField(
             controller: _titleController,
-            decoration: const InputDecoration(
-              labelText: 'Title',
+            decoration: InputDecoration(
+              hintText: 'Title',
+              hintStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
             ),
           ),
           TextField(
             controller: _descriptionController,
-            decoration: const InputDecoration(
-              labelText: 'Description',
+            decoration: InputDecoration(
+              hintText: 'Description',
+              hintStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
             ),
           ),
           TextField(
             controller: _durationController,
-            decoration: const InputDecoration(
-              labelText: 'Duration',
+            decoration: InputDecoration(
+              hintText: 'Duration',
+              hintStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
             ),
             keyboardType: TextInputType.number,
           ),
           TextField(
             controller: _priceController,
-            decoration: const InputDecoration(
-              labelText: 'Price',
+            decoration: InputDecoration(
+              hintText: 'Price',
+              hintStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
             ),
             keyboardType: TextInputType.number,
           ),
           DateTimeField(
             controller: _startDateController,
-            decoration: const InputDecoration(
-              labelText: 'Start date',
+            decoration: InputDecoration(
+              hintText: 'Start date',
+              hintStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
             ),
             format: DateFormat("yyyy-MM-dd HH:mm"),
             onShowPicker: (context, currentValue) async {
@@ -114,25 +129,6 @@ class _AddCourseWidgetState extends State<AddCourseWidget> {
           ),
           DropdownButtonFormField<Category>(
             isExpanded: true,
-            /*decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                  borderSide: BorderSide(width: 0.5, color: Colors.black87)
-              ),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                  borderSide: BorderSide(width: 0.5, color: Colors.black87)
-              ),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                  borderSide: BorderSide(width: 0.5, color: Colors.black87)
-              ),
-              focusColor: Colors.black54,
-              hoverColor: Colors.black54,
-
-            ),*/
-            //borderRadius: BorderRadius.all(Radius.circular(12)),
             value: selectedCategory,
             hint: Text('Category'),
             onChanged: (newValue) {
