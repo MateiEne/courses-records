@@ -4,6 +4,7 @@ class Course {
   final String? description;
   final int date;
   final double duration;
+  final double price;
   final int categoryId;
   final String teacherEmail;
 
@@ -13,6 +14,7 @@ class Course {
     required this.description,
     required this.date,
     required this.duration,
+    required this.price,
     required this.categoryId,
     required this.teacherEmail,
   });
@@ -23,6 +25,7 @@ class Course {
         description = map['description'],
         date = map['date'],
         duration = map['duration'],
+        price = map['price'],
         categoryId = map['categoryId'],
         teacherEmail = map['teacherEmail'];
 
@@ -33,6 +36,7 @@ class Course {
       "description": description,
       "date": date,
       "duration": duration,
+      "price": price,
       "categoryId": categoryId,
       "teacherEmail": teacherEmail,
     };

@@ -5,8 +5,8 @@ extension CoursesTableExtension on DatabaseHelper {
     final db = await database;
 
     return await db.rawInsert('''
-      INSERT INTO $_COURSES_TABLE(title, description, date, duration, categoryID, teacherEmail)
-      VALUES ("${course.title}", "${course.description}", ${course.date}, ${course.duration}, ${course.categoryId}, "${course.teacherEmail}")
+      INSERT INTO $_COURSES_TABLE(title, description, date, duration, price, categoryID, teacherEmail)
+      VALUES ("${course.title}", "${course.description}", ${course.date}, ${course.duration}, ${course.price}, ${course.categoryId}, "${course.teacherEmail}")
     ''');
   }
 
@@ -25,8 +25,8 @@ extension CoursesTableExtension on DatabaseHelper {
     }
 
     return await db.rawInsert('''
-      INSERT INTO $_COURSES_TABLE(title, description, date, duration, categoryID, teacherEmail)
-      VALUES ("${course.title}", "${course.description}", ${course.date}, ${course.duration}, ${course.categoryId}, "${course.teacherEmail}")
+      INSERT INTO $_COURSES_TABLE(title, description, date, duration, price, categoryID, teacherEmail)
+      VALUES ("${course.title}", "${course.description}", ${course.date}, ${course.duration}, ${course.price}, ${course.categoryId}, "${course.teacherEmail}")
     ''');
   }
 
@@ -49,7 +49,7 @@ extension CoursesTableExtension on DatabaseHelper {
 
     await db.rawUpdate('''
       UPDATE $_COURSES_TABLE
-      SET title = "${course.title}", description = "${course.description}", date = ${course.date}, duration = ${course.duration}, categoryID = ${course.categoryId}, teacherEmail = "${course.teacherEmail}
+      SET title = "${course.title}", description = "${course.description}", date = ${course.date}, duration = ${course.duration}, price = ${course.price}, categoryID = ${course.categoryId}, teacherEmail = "${course.teacherEmail}
       WHERE id = ${course.id}
     ''');
   }
@@ -57,7 +57,8 @@ extension CoursesTableExtension on DatabaseHelper {
   Future<List<Course>> getAllCourses({required int categoryId}) async {
     final db = await database;
 
-    final List<Map<String, Object?>> result = await db.rawQuery('SELECT * FROM $_COURSES_TABLE WHERE categoryID = $categoryId');
+    final List<Map<String, Object?>> result =
+        await db.rawQuery('SELECT * FROM $_COURSES_TABLE WHERE categoryID = $categoryId');
 
     return result.map((res) => Course.fromMap(res)).toList();
   }

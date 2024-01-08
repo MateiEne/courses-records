@@ -1,13 +1,12 @@
 part of 'database_helper.dart';
 
 extension CoursesRecordsTableExtension on DatabaseHelper {
-
   Future<int> insertCourseRecord(CourseRecord courseRecord) async {
     final db = await database;
 
     return await db.rawInsert('''
-      INSERT INTO $_COURSES_RECORDS_TABLE(grade, studentEmail, courseID)
-      VALUES (${courseRecord.grade}, "${courseRecord.studentEmail}", ${courseRecord.courseId})
+      INSERT INTO $_COURSES_RECORDS_TABLE(grade, date, studentEmail, courseID)
+      VALUES (${courseRecord.grade}, ${courseRecord.date}, "${courseRecord.studentEmail}", ${courseRecord.courseId})
     ''');
   }
 
@@ -16,7 +15,7 @@ extension CoursesRecordsTableExtension on DatabaseHelper {
 
     await db.rawUpdate('''
       UPDATE $_COURSES_RECORDS_TABLE
-      SET grade = ${courseRecord.grade}, studentEmail = "${courseRecord.studentEmail}", courseID = ${courseRecord.courseId}
+      SET grade = ${courseRecord.grade}, date = ${courseRecord.date}, studentEmail = "${courseRecord.studentEmail}", courseID = ${courseRecord.courseId}
       WHERE id = ${courseRecord.id}
     ''');
   }
@@ -36,8 +35,8 @@ extension CoursesRecordsTableExtension on DatabaseHelper {
     }
 
     return await db.rawInsert('''
-      INSERT INTO $_COURSES_RECORDS_TABLE(grade, studentEmail, courseID)
-      VALUES (${courseRecord.grade}, "${courseRecord.studentEmail}", ${courseRecord.courseId})
+      INSERT INTO $_COURSES_RECORDS_TABLE(grade, date, studentEmail, courseID)
+      VALUES (${courseRecord.grade}, ${courseRecord.date}, "${courseRecord.studentEmail}", ${courseRecord.courseId})
     ''');
   }
 

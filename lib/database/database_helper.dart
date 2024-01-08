@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
-import 'package:db_homework/models/courseRecord.dart';
-import 'package:db_homework/models/registration.dart';
+import 'package:db_homework/models/course_record.dart';
 import 'package:db_homework/models/student.dart';
 import 'package:db_homework/models/teacher.dart';
 import 'package:sqflite/sqflite.dart';
@@ -12,7 +11,6 @@ part 'extension_courses_db.dart';
 part 'extension_categories_db.dart';
 part 'extension_teachers_db.dart';
 part 'extension_students_db.dart';
-part 'extension_registrations_db.dart';
 part 'extension_courses_records_db.dart';
 
 const _DATABASE_NAME = "courses_records.db";
@@ -83,6 +81,7 @@ class DatabaseHelper {
         description TEXT,
         date INTEGER NOT NULL,
         duration FLOAT NOT NULL,
+        price FLOAT NOT NULL,
         categoryID INTEGER NOT NULL,
         teacherEmail TEXT NOT NULL,
         FOREIGN KEY (categoryID) REFERENCES $_CATGORIES_TABLE(id),
@@ -101,22 +100,12 @@ class DatabaseHelper {
       )
     ''');
 
-    // Create the registrations table
-    await db.execute('''
-      CREATE TABLE $_REGISTRATIONS_TABLE(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        date INTEGER NOT NULL,
-        price FLOAT NOT NULL,
-        studentEmail TEXT NOT NULL,
-        FOREIGN KEY (studentEmail) REFERENCES $_STUDENTS_TABLE(email)
-      )
-    ''');
-
     // Create the courses_records table
     await db.execute('''
       CREATE TABLE $_COURSES_RECORDS_TABLE(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         grade FLOAT NOT NULL,
+        date INTEGER NOT NULL,
         studentEmail TEXT NOT NULL,
         courseID INTEGER NOT NULL,
         FOREIGN KEY (studentEmail) REFERENCES $_STUDENTS_TABLE(email),
