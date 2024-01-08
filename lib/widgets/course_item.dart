@@ -1,24 +1,39 @@
+import 'package:db_homework/models/course.dart';
+import 'package:db_homework/screens/course_details.dart';
 import 'package:flutter/material.dart';
 
 class CourseItemWidget extends StatelessWidget {
   const CourseItemWidget({
     super.key,
-    required this.title,
-    required this.description,
+    required this.course,
   });
 
-  final String title;
-  final String? description;
+  final Course course;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(title),
-      subtitle: description == null
-          ? const SizedBox.shrink()
-          : Text(
-              description!,
+    return InkWell(
+      onTap: () {
+        if (context.mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return CourseDetailsScreen(
+                  course: course,
+                );
+              },
             ),
+          );
+        }
+      },
+      child: ListTile(
+        title: Text(course.title),
+        subtitle: course.description == null
+            ? const SizedBox.shrink()
+            : Text(
+                course.description!,
+              ),
+      ),
     );
   }
 }

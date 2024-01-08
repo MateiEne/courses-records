@@ -57,7 +57,7 @@ extension CoursesTableExtension on DatabaseHelper {
 
     await db.rawUpdate('''
       UPDATE $_COURSES_TABLE
-      SET title = "${course.title}", description = "${course.description}", date = ${course.date}, duration = ${course.duration}, price = ${course.price}, categoryID = ${course.categoryId}, teacherEmail = "${course.teacherEmail}
+      SET title = "${course.title}", description = "${course.description}", date = ${course.date}, duration = ${course.duration}, price = ${course.price}, categoryID = ${course.categoryId}, teacherEmail = "${course.teacherEmail}"
       WHERE id = ${course.id}
     ''');
   }

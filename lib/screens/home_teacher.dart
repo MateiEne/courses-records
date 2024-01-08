@@ -62,7 +62,7 @@ class _HomeTeacherScreenState extends State<HomeTeacherScreen> {
               icon: const Icon(Icons.logout)),
         ],
         leading: IconButton(
-          onPressed: () {
+          onPressed: () async {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (BuildContext context) {
@@ -85,8 +85,7 @@ class _HomeTeacherScreenState extends State<HomeTeacherScreen> {
           itemCount: courses.length,
           itemBuilder: (BuildContext context, int index) {
             return CourseItemWidget(
-              title: courses[index].title,
-              description: courses[index].description,
+              course: courses[index],
             );
           },
         ),

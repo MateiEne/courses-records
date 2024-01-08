@@ -49,8 +49,7 @@ class _CategoryCoursesState extends State<CategoryCourses> {
         itemCount: courses.length,
         itemBuilder: (BuildContext context, int index) {
           return CourseItemWidget(
-            title: courses[index].title,
-            description: courses[index].description,
+            course: courses[index],
           );
         },
       ),
