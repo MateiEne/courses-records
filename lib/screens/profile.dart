@@ -1,6 +1,7 @@
 import 'package:db_homework/database/database_helper.dart';
 import 'package:db_homework/models/student.dart';
 import 'package:db_homework/models/teacher.dart';
+import 'package:db_homework/screens/login.dart';
 import 'package:db_homework/widgets/profile_details.dart';
 import 'package:flutter/material.dart';
 
@@ -70,6 +71,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   bool _isLoading = false;
 
+  Future<void> _onDelete() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    DatabaseHelper db = DatabaseHelper.instance;
+
+    await db.deleteStudent(email: widget.email);
+
+    Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        _isLoading = false;
+      });
+    }).then(
+      (value) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return const LoginScreen();
+            },
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _getDetails() async {
     setState(() {
       _isLoading = true;
@@ -129,18 +156,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Theme.of(context).colorScheme.onBackground,
       body: Stack(
         children: [
-          ProfileDetailsWidget(
-            key: UniqueKey(),
-            onPrimaryButtonPressed: _onUpdateButtonPressed,
-            showTeacherToggle: false,
-            showEmailField: false,
-            primaryButtonText: 'Update',
-            firstName: _firstName,
-            lastName: _lastName,
-            email: _email,
-            phoneNumber: _phoneNumber,
-            password: _password,
-            isTeacher: widget.isTeacher,
+          Column(
+            children: [
+              ProfileDetailsWidget(
+                key: UniqueKey(),
+                onPrimaryButtonPressed: _onUpdateButtonPressed,
+                showTeacherToggle: false,
+                showEmailField: false,
+                primaryButtonText: 'Update',
+                firstName: _firstName,
+                lastName: _lastName,
+                email: _email,
+                phoneNumber: _phoneNumber,
+                password: _password,
+                isTeacher: widget.isTeacher,
+              ),
+              if (!widget.isTeacher)
+                const SizedBox(
+                  height: 32,
+                ),
+              if (!widget.isTeacher)
+                ElevatedButton(
+                  onPressed: _onDelete,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                  ),
+                  child: Text(
+                    'Delete',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                  ),
+                ),
+            ],
           ),
           if (_isLoading)
             const Center(

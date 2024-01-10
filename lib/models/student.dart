@@ -17,7 +17,7 @@ class Student {
       : firstName = map['firstName'],
         lastName = map['lastName'],
         email = map['email'],
-        password = map['password'],
+        password = map['password'] ?? '',
         phoneNumber = map['phoneNumber'];
 
   Map<String, dynamic> toMap() {

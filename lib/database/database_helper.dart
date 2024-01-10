@@ -17,6 +17,8 @@ part 'extension_students_db.dart';
 
 part 'extension_courses_records_db.dart';
 
+part 'extension_simple_queries_db.dart';
+
 const _DATABASE_NAME = "courses_records.db";
 
 const _CATGORIES_TABLE = "categories";

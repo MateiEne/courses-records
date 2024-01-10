@@ -1,5 +1,6 @@
 import 'package:db_homework/models/course.dart';
 import 'package:db_homework/screens/course_details.dart';
+import 'package:db_homework/screens/course_students_attendees.dart';
 import 'package:flutter/material.dart';
 
 class CourseItemWidget extends StatelessWidget {
@@ -18,7 +19,7 @@ class CourseItemWidget extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (BuildContext context) {
-                return CourseDetailsScreen(
+                return CourseStudentsAttendeesScreen(
                   course: course,
                 );
               },

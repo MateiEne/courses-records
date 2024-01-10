@@ -19,11 +19,6 @@ extension StudentsTableExtension on DatabaseHelper {
     ''');
 
     await db.rawDelete('''
-      DELETE FROM $_REGISTRATIONS_TABLE
-      WHERE studentEmail = "$email"
-    ''');
-
-    await db.rawDelete('''
       DELETE FROM $_COURSES_RECORDS_TABLE
       WHERE studentEmail = "$email"
     ''');
