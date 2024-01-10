@@ -12,4 +12,16 @@ extension SimpleQueriesExtension on DatabaseHelper {
 
     return students;
   }
+
+  Future<List<Course>> getAllCoursesFromStudent({required String studentEmail}) async {
+    final db = await database;
+
+    final List<Course> courses = await db.rawQuery('''
+      SELECT C.id, C.title, C.description, C.date, C.duration, C.price, C.categoryID, C.teacherEmail FROM $_COURSES_TABLE C
+      INNER JOIN $_COURSES_RECORDS_TABLE CR ON C.id = CR.courseID
+      WHERE CR.studentEmail = "$studentEmail"
+    ''').then((value) => value.map((e) => Course.fromMap(e)).toList());
+
+    return courses;
+  }
 }

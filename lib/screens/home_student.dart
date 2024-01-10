@@ -3,6 +3,7 @@ import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
 import 'package:db_homework/screens/login.dart';
 import 'package:db_homework/screens/profile.dart';
+import 'package:db_homework/screens/students_courses.dart';
 import 'package:db_homework/widgets/category_item.dart';
 import 'package:flutter/material.dart';
 
@@ -59,20 +60,77 @@ class _HomeStudentScreenState extends State<HomeStudentScreen> {
               },
               icon: const Icon(Icons.logout)),
         ],
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return ProfileScreen(
-                    email: widget.studentEmail,
-                    isTeacher: false,
-                  );
-                },
+        // leading: IconButton(
+        //   onPressed: () {
+        //     Navigator.of(context).push(
+        //       MaterialPageRoute(
+        //         builder: (BuildContext context) {
+        //           return ProfileScreen(
+        //             email: widget.studentEmail,
+        //             isTeacher: false,
+        //           );
+        //         },
+        //       ),
+        //     );
+        //   },
+        //   icon: const Icon(Icons.person),
+        // ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
               ),
-            );
-          },
-          icon: const Icon(Icons.person),
+              child: Text(
+                'Course records',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Text('Profile'),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return ProfileScreen(
+                        email: widget.studentEmail,
+                        isTeacher: false,
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('My Courses'),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return StudentsCoursesScreen(studentEmail: widget.studentEmail);
+                    },
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Logout'),
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return const LoginScreen();
+                    },
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
       body: ListView.builder(

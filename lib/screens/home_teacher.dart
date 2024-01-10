@@ -1,6 +1,7 @@
 import 'package:db_homework/database/database_helper.dart';
 import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
+import 'package:db_homework/screens/course_students_attendees.dart';
 import 'package:db_homework/screens/login.dart';
 import 'package:db_homework/screens/profile.dart';
 import 'package:db_homework/widgets/add_course.dart';
@@ -86,6 +87,19 @@ class _HomeTeacherScreenState extends State<HomeTeacherScreen> {
           itemBuilder: (BuildContext context, int index) {
             return CourseItemWidget(
               course: courses[index],
+              onTap: () {
+                if (context.mounted) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return CourseStudentsAttendeesScreen(
+                          course: courses[index],
+                        );
+                      },
+                    ),
+                  );
+                }
+              },
             );
           },
         ),

@@ -7,26 +7,16 @@ class CourseItemWidget extends StatelessWidget {
   const CourseItemWidget({
     super.key,
     required this.course,
+    this.onTap,
   });
 
   final Course course;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        if (context.mounted) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return CourseStudentsAttendeesScreen(
-                  course: course,
-                );
-              },
-            ),
-          );
-        }
-      },
+      onTap: onTap,
       child: ListTile(
         title: Text(course.title),
         subtitle: course.description == null
