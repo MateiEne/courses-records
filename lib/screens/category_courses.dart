@@ -2,8 +2,7 @@ import 'package:db_homework/database/database_helper.dart';
 import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
 import 'package:db_homework/models/course_record.dart';
-import 'package:db_homework/widgets/course_item.dart';
-import 'package:expandable/expandable.dart';
+import 'package:db_homework/models/teacher.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCourses extends StatefulWidget {
@@ -22,19 +21,30 @@ class CategoryCourses extends StatefulWidget {
 
 class _CategoryCoursesState extends State<CategoryCourses> {
   List<Course> courses = [];
+  List<Teacher> teachers = [];
   List<CourseRecord> enrolledCourses = [];
 
   double totalHours = 0;
 
-  Future<void> _getCourses() async {
+  Future<void> _getCoursesAndTeachers() async {
     DatabaseHelper database = DatabaseHelper.instance;
 
     final List<Course> result = await database.getAllCourses(
       categoryId: widget.category.id,
     );
 
+    List<Teacher> teachers = [];
+
+    for (Course course in result) {
+      final Teacher teacher = await database.getTeacherForCourse(courseId: course.id);
+
+      teachers.add(teacher);
+    }
+
     setState(() {
       courses = result;
+
+      this.teachers = teachers;
     });
   }
 
@@ -108,12 +118,14 @@ class _CategoryCoursesState extends State<CategoryCourses> {
     await _getTotalHours();
   }
 
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    _getCourses();
+    _getCoursesAndTeachers();
     _getEnrolledCourses();
     _getTotalHours();
   }
@@ -147,26 +159,50 @@ class _CategoryCoursesState extends State<CategoryCourses> {
               itemBuilder: (BuildContext context, int index) {
                 bool isEnrolled = _isEnrolled(courses[index].id);
 
-                return ListTile(
-                  title: Text(courses[index].title),
-                  subtitle: courses[index].description == null
-                      ? const SizedBox.shrink()
-                      : Text(
-                          courses[index].description!,
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      title: Text(courses[index].title),
+                      subtitle: courses[index].description == null
+                          ? const SizedBox.shrink()
+                          : Text(
+                              courses[index].description!,
+                            ),
+                      trailing: isEnrolled
+                          ? ElevatedButton(
+                              onPressed: () async {
+                                await _leaveCourse(courses[index].id);
+                              },
+                              child: const Text('Leave'),
+                            )
+                          : ElevatedButton(
+                              onPressed: () async {
+                                await _enrollStudent(courses[index].id);
+                              },
+                              child: const Text('Enroll'),
+                            ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
+                      child: Text(
+                        "Professor: ${teachers[index].firstName} ${teachers[index].lastName}",
+                        style: const TextStyle(
+                          color: Colors.white,
                         ),
-                  trailing: isEnrolled
-                      ? ElevatedButton(
-                          onPressed: () async {
-                            await _leaveCourse(courses[index].id);
-                          },
-                          child: const Text('Leave'),
-                        )
-                      : ElevatedButton(
-                          onPressed: () async {
-                            await _enrollStudent(courses[index].id);
-                          },
-                          child: const Text('Enroll'),
-                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      height: 2,
+                      width: double.infinity,
+                      color: Colors.black,
+                    ),
+                  ],
                 );
               },
             ),
