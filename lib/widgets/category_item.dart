@@ -11,10 +11,12 @@ class CategoryItemWidget extends StatefulWidget {
     super.key,
     required this.category,
     required this.studentEmail,
+    this.showCheckMark,
   });
 
   final Category category;
   final String studentEmail;
+  final bool? showCheckMark;
 
   @override
   State<CategoryItemWidget> createState() => _CategoryItemWidgetState();
@@ -83,6 +85,16 @@ class _CategoryItemWidgetState extends State<CategoryItemWidget> {
                       height: 200,
                       width: double.infinity,
                     ),
+                    if (widget.showCheckMark ?? false)
+                      const Positioned(
+                        top: 10,
+                        right: 10,
+                        child: Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                          size: 50,
+                        ),
+                      ),
                     Positioned(
                       bottom: 0,
                       left: 0,

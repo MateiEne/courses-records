@@ -1,6 +1,7 @@
 import 'package:db_homework/database/database_helper.dart';
 import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
+import 'package:db_homework/models/student.dart';
 import 'package:db_homework/screens/login.dart';
 import 'package:db_homework/screens/profile.dart';
 import 'package:db_homework/widgets/add_course.dart';
@@ -24,12 +25,27 @@ class _StudentsCategoriesScreenState extends State<StudentsCategoriesScreen> {
   final DatabaseHelper db = DatabaseHelper.instance;
 
   List<Category> categories = [];
+  List<bool> isEnrolledAtAllCoursesFromCategory = [];
 
   Future<void> initCategories() async {
     List<Category> result = await db.getAllCategoriesForStudent(studentEmail: widget.studentEmail);
 
+    List<bool> isEnrolledAtAllCoursesFromCategory = [];
+
+    for (Category category in result) {
+      final List<Student> students = await db.getAllStudentsEnrolledInAllCoursesFromCategory(
+        categoryId: category.id,
+      );
+
+      isEnrolledAtAllCoursesFromCategory.add(
+        students.any((student) => student.email == widget.studentEmail),
+      );
+    }
+
     setState(() {
       categories = result;
+
+      this.isEnrolledAtAllCoursesFromCategory = isEnrolledAtAllCoursesFromCategory;
     });
   }
 
@@ -56,9 +72,13 @@ class _StudentsCategoriesScreenState extends State<StudentsCategoriesScreen> {
         child: ListView.builder(
           itemCount: categories.length,
           itemBuilder: (BuildContext context, int index) {
+            bool isEnrolledAtAllCoursesFromCategory = this.isEnrolledAtAllCoursesFromCategory[index];
+
+
             return CategoryItemWidget(
               category: categories[index],
               studentEmail: widget.studentEmail,
+              showCheckMark: isEnrolledAtAllCoursesFromCategory,
             );
           },
         ),
