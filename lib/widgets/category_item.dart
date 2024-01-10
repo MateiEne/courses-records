@@ -7,9 +7,11 @@ class CategoryItemWidget extends StatelessWidget {
   const CategoryItemWidget({
     super.key,
     required this.category,
+    required this.studentEmail,
   });
 
   final Category category;
+  final String studentEmail;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,10 @@ class CategoryItemWidget extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return CategoryCourses(category: category);
+                  return CategoryCourses(
+                    category: category,
+                    studentEmail: studentEmail,
+                  );
                 },
               ),
             );

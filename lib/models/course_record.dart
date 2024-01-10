@@ -18,7 +18,7 @@ class CourseRecord {
         grade = map['grade'],
         date = map['date'],
         studentEmail = map['studentEmail'],
-        courseId = map['courseId'];
+        courseId = map['courseID'];
 
   Map<String, dynamic> toMap() {
     return {
@@ -26,7 +26,7 @@ class CourseRecord {
       "grade": grade,
       "date": date,
       "studentEmail": studentEmail,
-      "courseId": courseId,
+      "courseID": courseId,
     };
   }
 }

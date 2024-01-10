@@ -94,6 +94,8 @@ class _HomeStudentScreenState extends State<HomeStudentScreen> {
             ListTile(
               title: const Text('Profile'),
               onTap: () {
+                Navigator.of(context).pop();
+
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (BuildContext context) {
@@ -109,6 +111,8 @@ class _HomeStudentScreenState extends State<HomeStudentScreen> {
             ListTile(
               title: const Text('My Courses'),
               onTap: () {
+                Navigator.of(context).pop();
+
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (BuildContext context) {
@@ -136,7 +140,10 @@ class _HomeStudentScreenState extends State<HomeStudentScreen> {
       body: ListView.builder(
         itemCount: categories.length,
         itemBuilder: (BuildContext context, int index) {
-          return CategoryItemWidget(category: categories[index]);
+          return CategoryItemWidget(
+            category: categories[index],
+            studentEmail: widget.studentEmail,
+          );
         },
       ),
     );
