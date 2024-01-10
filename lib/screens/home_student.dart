@@ -3,6 +3,7 @@ import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
 import 'package:db_homework/screens/login.dart';
 import 'package:db_homework/screens/profile.dart';
+import 'package:db_homework/screens/students_categories.dart';
 import 'package:db_homework/screens/students_courses.dart';
 import 'package:db_homework/widgets/category_item.dart';
 import 'package:flutter/material.dart';
@@ -60,21 +61,6 @@ class _HomeStudentScreenState extends State<HomeStudentScreen> {
               },
               icon: const Icon(Icons.logout)),
         ],
-        // leading: IconButton(
-        //   onPressed: () {
-        //     Navigator.of(context).push(
-        //       MaterialPageRoute(
-        //         builder: (BuildContext context) {
-        //           return ProfileScreen(
-        //             email: widget.studentEmail,
-        //             isTeacher: false,
-        //           );
-        //         },
-        //       ),
-        //     );
-        //   },
-        //   icon: const Icon(Icons.person),
-        // ),
       ),
       drawer: Drawer(
         child: ListView(
@@ -117,6 +103,20 @@ class _HomeStudentScreenState extends State<HomeStudentScreen> {
                   MaterialPageRoute(
                     builder: (BuildContext context) {
                       return StudentsCoursesScreen(studentEmail: widget.studentEmail);
+                    },
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('My Categories'),
+              onTap: () {
+                Navigator.of(context).pop();
+
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return StudentsCategoriesScreen(studentEmail: widget.studentEmail);
                     },
                   ),
                 );

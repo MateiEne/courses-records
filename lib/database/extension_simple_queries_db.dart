@@ -13,7 +13,7 @@ extension SimpleQueriesExtension on DatabaseHelper {
     return students;
   }
 
-  Future<List<Course>> getAllCoursesFromStudent({required String studentEmail}) async {
+  Future<List<Course>> getAllCoursesForStudent({required String studentEmail}) async {
     final db = await database;
 
     final List<Course> courses = await db.rawQuery('''
@@ -23,6 +23,19 @@ extension SimpleQueriesExtension on DatabaseHelper {
     ''').then((value) => value.map((e) => Course.fromMap(e)).toList());
 
     return courses;
+  }
+
+  Future<List<Category>> getAllCategoriesForStudent({required String studentEmail}) async {
+    final db = await database;
+
+    final List<Category> categories = await db.rawQuery('''
+      SELECT DISTINCT C.id, C.title, C.description, C.coursesNumber, C.maxStudentsNumber, C.imageUrl FROM $_CATEGORIES_TABLE C
+      INNER JOIN $_COURSES_TABLE CO ON C.id = CO.categoryID
+      INNER JOIN $_COURSES_RECORDS_TABLE CR ON CO.id = CR.courseID
+      WHERE CR.studentEmail = "$studentEmail"
+    ''').then((value) => value.map((e) => Category.fromMap(e)).toList());
+
+    return categories;
   }
 
   Future<double> getTotalDuration({required String studentEmail}) async {

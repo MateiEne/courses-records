@@ -8,8 +8,8 @@ import 'package:db_homework/widgets/category_item.dart';
 import 'package:db_homework/widgets/course_item.dart';
 import 'package:flutter/material.dart';
 
-class StudentsCoursesScreen extends StatefulWidget {
-  const StudentsCoursesScreen({
+class StudentsCategoriesScreen extends StatefulWidget {
+  const StudentsCategoriesScreen({
     Key? key,
     required this.studentEmail,
   }) : super(key: key);
@@ -17,19 +17,19 @@ class StudentsCoursesScreen extends StatefulWidget {
   final String studentEmail;
 
   @override
-  _StudentsCoursesScreenState createState() => _StudentsCoursesScreenState();
+  _StudentsCategoriesScreenState createState() => _StudentsCategoriesScreenState();
 }
 
-class _StudentsCoursesScreenState extends State<StudentsCoursesScreen> {
+class _StudentsCategoriesScreenState extends State<StudentsCategoriesScreen> {
   final DatabaseHelper db = DatabaseHelper.instance;
 
-  List<Course> courses = [];
+  List<Category> categories = [];
 
-  Future<void> initCourses() async {
-    List<Course> result = await db.getAllCoursesForStudent(studentEmail: widget.studentEmail);
+  Future<void> initCategories() async {
+    List<Category> result = await db.getAllCategoriesForStudent(studentEmail: widget.studentEmail);
 
     setState(() {
-      courses = result;
+      categories = result;
     });
   }
 
@@ -37,7 +37,7 @@ class _StudentsCoursesScreenState extends State<StudentsCoursesScreen> {
   void initState() {
     super.initState();
 
-    initCourses();
+    initCategories();
   }
 
   @override
@@ -45,19 +45,20 @@ class _StudentsCoursesScreenState extends State<StudentsCoursesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'My Courses',
+          'My Categories',
         ),
         centerTitle: true,
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await initCourses();
+          await initCategories();
         },
         child: ListView.builder(
-          itemCount: courses.length,
+          itemCount: categories.length,
           itemBuilder: (BuildContext context, int index) {
-            return CourseItemWidget(
-              course: courses[index],
+            return CategoryItemWidget(
+              category: categories[index],
+              studentEmail: widget.studentEmail,
             );
           },
         ),

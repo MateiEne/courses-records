@@ -21,7 +21,7 @@ part 'extension_simple_queries_db.dart';
 
 const _DATABASE_NAME = "courses_records.db";
 
-const _CATGORIES_TABLE = "categories";
+const _CATEGORIES_TABLE = "categories";
 const _COURSES_TABLE = "courses";
 const _STUDENTS_TABLE = "students";
 const _TEACHERS_TABLE = "teachers";
@@ -85,7 +85,7 @@ class DatabaseHelper {
   Future<void> _onCreate(Database db, int version) async {
     // Create the categories table
     await db.execute('''
-      CREATE TABLE $_CATGORIES_TABLE(
+      CREATE TABLE $_CATEGORIES_TABLE(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         description TEXT,
@@ -117,7 +117,7 @@ class DatabaseHelper {
         price FLOAT NOT NULL,
         categoryID INTEGER NOT NULL,
         teacherEmail TEXT NOT NULL,
-        FOREIGN KEY (categoryID) REFERENCES $_CATGORIES_TABLE(id),
+        FOREIGN KEY (categoryID) REFERENCES $_CATEGORIES_TABLE(id),
         FOREIGN KEY (teacherEmail) REFERENCES $_TEACHERS_TABLE(email)
       )
     ''');
