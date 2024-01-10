@@ -36,4 +36,16 @@ extension SimpleQueriesExtension on DatabaseHelper {
 
     return result.first['totalDuration'] as double;
   }
+
+  Future<List<Teacher>> getAllTeachersFromCategory({required int categoryId}) async {
+    final db = await database;
+
+    final List<Teacher> teachers = await db.rawQuery('''
+      SELECT T.email, T.firstName, T.lastName, T.phoneNumber FROM $_TEACHERS_TABLE T
+      INNER JOIN $_COURSES_TABLE C ON T.email = C.teacherEmail
+      WHERE C.categoryID = $categoryId
+    ''').then((value) => value.map((e) => Teacher.fromMap(e)).toList());
+
+    return teachers;
+  }
 }

@@ -3,6 +3,7 @@ import 'package:db_homework/models/category.dart';
 import 'package:db_homework/models/course.dart';
 import 'package:db_homework/models/course_record.dart';
 import 'package:db_homework/widgets/course_item.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCourses extends StatefulWidget {
