@@ -80,6 +80,15 @@ extension CoursesTableExtension on DatabaseHelper {
     return result.map((res) => Course.fromMap(res)).toList();
   }
 
+  Future<void> setRandomPrices() async {
+    final db = await database;
+
+    await db.rawUpdate('''
+      UPDATE $_COURSES_TABLE
+      SET price = (ABS(RANDOM()) % 100) + 1
+    ''');
+  }
+
 /*  Future<List<Course>> getAllCourses() async {
     final db = await database;
 

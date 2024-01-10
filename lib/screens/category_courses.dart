@@ -25,6 +25,7 @@ class _CategoryCoursesState extends State<CategoryCourses> {
   List<CourseRecord> enrolledCourses = [];
 
   double totalHours = 0;
+  double totalPrice = 0;
 
   Future<void> _getCoursesAndTeachers() async {
     DatabaseHelper database = DatabaseHelper.instance;
@@ -63,12 +64,22 @@ class _CategoryCoursesState extends State<CategoryCourses> {
   Future<void> _getTotalHours() async {
     DatabaseHelper database = DatabaseHelper.instance;
 
-    final double result = await database.getTotalDuration(
+    final double result = await database.getTotalDuration(studentEmail: widget.studentEmail);
+
+    setState(() {
+      totalHours = result;
+    });
+  }
+
+  Future<void> _getTotalPrice() async {
+    DatabaseHelper database = DatabaseHelper.instance;
+
+    final double result = await database.getTotalPrice(
       studentEmail: widget.studentEmail,
     );
 
     setState(() {
-      totalHours = result;
+      totalPrice = result;
     });
   }
 
@@ -92,6 +103,7 @@ class _CategoryCoursesState extends State<CategoryCourses> {
 
     await _getEnrolledCourses();
     await _getTotalHours();
+    await _getTotalPrice();
   }
 
   bool _isEnrolled(int courseId) {
@@ -116,9 +128,8 @@ class _CategoryCoursesState extends State<CategoryCourses> {
 
     await _getEnrolledCourses();
     await _getTotalHours();
+    await _getTotalPrice();
   }
-
-
 
   @override
   void initState() {
@@ -128,6 +139,7 @@ class _CategoryCoursesState extends State<CategoryCourses> {
     _getCoursesAndTeachers();
     _getEnrolledCourses();
     _getTotalHours();
+    _getTotalPrice();
   }
 
   @override
@@ -140,6 +152,16 @@ class _CategoryCoursesState extends State<CategoryCourses> {
         children: [
           Text(
             "Total hours: $totalHours",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            "Total price: $totalPrice",
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
