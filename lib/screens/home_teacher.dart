@@ -4,6 +4,9 @@ import 'package:db_homework/models/course.dart';
 import 'package:db_homework/screens/course_students_attendees.dart';
 import 'package:db_homework/screens/login.dart';
 import 'package:db_homework/screens/profile.dart';
+import 'package:db_homework/screens/students_categories.dart';
+import 'package:db_homework/screens/students_courses.dart';
+import 'package:db_homework/screens/teacher_students_info.dart';
 import 'package:db_homework/widgets/add_course.dart';
 import 'package:db_homework/widgets/category_item.dart';
 import 'package:db_homework/widgets/course_item.dart';
@@ -62,20 +65,66 @@ class _HomeTeacherScreenState extends State<HomeTeacherScreen> {
               },
               icon: const Icon(Icons.logout)),
         ],
-        leading: IconButton(
-          onPressed: () async {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return ProfileScreen(
-                    email: widget.teacherEmail,
-                    isTeacher: true,
-                  );
-                },
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
               ),
-            );
-          },
-          icon: const Icon(Icons.person),
+              child: Text(
+                'Course records',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Text('Profile'),
+              onTap: () {
+                Navigator.of(context).pop();
+
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return ProfileScreen(
+                        email: widget.teacherEmail,
+                        isTeacher: true,
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Students'),
+              onTap: () {
+                Navigator.of(context).pop();
+
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return TeacherStudentsInfo();
+                    },
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Logout'),
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return const LoginScreen();
+                    },
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
       body: RefreshIndicator(

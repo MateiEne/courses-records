@@ -17,4 +17,18 @@ extension ComlexQueriesExtension on DatabaseHelper {
 
     return result.map((res) => Student.fromMap(res)).toList();
   }
+
+  Future<List<Student>> getNotEnrolledStudents() async {
+    final db = await database;
+
+    final List<Map<String, Object?>> result = await db.rawQuery('''
+      SELECT * FROM $_STUDENTS_TABLE S
+      WHERE S.email NOT IN 
+            (SELECT DISTINCT S2.email
+            FROM $_STUDENTS_TABLE S2, $_COURSES_RECORDS_TABLE CR
+            WHERE S2.email = CR.studentEmail)
+    ''');
+
+    return result.map((res) => Student.fromMap(res)).toList();
+  }
 }
