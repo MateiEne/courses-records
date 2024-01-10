@@ -23,6 +23,8 @@ class _CategoryCoursesState extends State<CategoryCourses> {
   List<Course> courses = [];
   List<CourseRecord> enrolledCourses = [];
 
+  double totalHours = 0;
+
   Future<void> _getCourses() async {
     DatabaseHelper database = DatabaseHelper.instance;
 
@@ -47,6 +49,18 @@ class _CategoryCoursesState extends State<CategoryCourses> {
     });
   }
 
+  Future<void> _getTotalHours() async {
+    DatabaseHelper database = DatabaseHelper.instance;
+
+    final double result = await database.getTotalDuration(
+      studentEmail: widget.studentEmail,
+    );
+
+    setState(() {
+      totalHours = result;
+    });
+  }
+
   Future<void> _enrollStudent(int courseId) async {
     DatabaseHelper database = DatabaseHelper.instance;
 
@@ -66,6 +80,7 @@ class _CategoryCoursesState extends State<CategoryCourses> {
     }
 
     await _getEnrolledCourses();
+    await _getTotalHours();
   }
 
   bool _isEnrolled(int courseId) {
@@ -89,6 +104,7 @@ class _CategoryCoursesState extends State<CategoryCourses> {
     }
 
     await _getEnrolledCourses();
+    await _getTotalHours();
   }
 
   @override
@@ -97,6 +113,8 @@ class _CategoryCoursesState extends State<CategoryCourses> {
     super.initState();
 
     _getCourses();
+    _getEnrolledCourses();
+    _getTotalHours();
   }
 
   @override
@@ -105,33 +123,54 @@ class _CategoryCoursesState extends State<CategoryCourses> {
       appBar: AppBar(
         title: const Text('Courses'),
       ),
-      body: ListView.builder(
-        itemCount: courses.length,
-        itemBuilder: (BuildContext context, int index) {
-          bool isEnrolled = _isEnrolled(courses[index].id);
+      body: Column(
+        children: [
+          Text(
+            "Total hours: $totalHours",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Container(
+            height: 2,
+            width: double.infinity,
+            color: Colors.white,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: courses.length,
+              itemBuilder: (BuildContext context, int index) {
+                bool isEnrolled = _isEnrolled(courses[index].id);
 
-          return ListTile(
-            title: Text(courses[index].title),
-            subtitle: courses[index].description == null
-                ? const SizedBox.shrink()
-                : Text(
-                    courses[index].description!,
-                  ),
-            trailing: isEnrolled
-                ? ElevatedButton(
-                    onPressed: () async {
-                      await _leaveCourse(courses[index].id);
-                    },
-                    child: const Text('Leave'),
-                  )
-                : ElevatedButton(
-                    onPressed: () async {
-                      await _enrollStudent(courses[index].id);
-                    },
-                    child: const Text('Enroll'),
-                  ),
-          );
-        },
+                return ListTile(
+                  title: Text(courses[index].title),
+                  subtitle: courses[index].description == null
+                      ? const SizedBox.shrink()
+                      : Text(
+                          courses[index].description!,
+                        ),
+                  trailing: isEnrolled
+                      ? ElevatedButton(
+                          onPressed: () async {
+                            await _leaveCourse(courses[index].id);
+                          },
+                          child: const Text('Leave'),
+                        )
+                      : ElevatedButton(
+                          onPressed: () async {
+                            await _enrollStudent(courses[index].id);
+                          },
+                          child: const Text('Enroll'),
+                        ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

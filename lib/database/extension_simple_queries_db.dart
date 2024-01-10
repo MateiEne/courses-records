@@ -24,4 +24,16 @@ extension SimpleQueriesExtension on DatabaseHelper {
 
     return courses;
   }
+
+  Future<double> getTotalDuration({required String studentEmail}) async {
+    final db = await database;
+
+    final List<Map<String, Object?>> result = await db.rawQuery('''
+      SELECT SUM(C.duration) as totalDuration FROM $_COURSES_TABLE C
+      INNER JOIN $_COURSES_RECORDS_TABLE CR ON C.id = CR.courseID
+      WHERE CR.studentEmail = "$studentEmail"
+    ''');
+
+    return result.first['totalDuration'] as double;
+  }
 }
