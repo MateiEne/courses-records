@@ -14,14 +14,17 @@ class _TeacherStudentsInfoState extends State<TeacherStudentsInfo> {
 
   List<Student> students = [];
   List<Student> notEnrolledStudents = [];
+  List<Student> topStudents = [];
 
   Future<void> initStudents() async {
     List<Student> result = await db.getAllStudents();
     List<Student> notEnrolledStudentsResult = await db.getNotEnrolledStudents();
+    List<Student> topStudentsResult = await db.getStudentsWithAverageGradeHigherThanAverage();
 
     setState(() {
       students = result;
       notEnrolledStudents = notEnrolledStudentsResult;
+      topStudents = topStudentsResult;
     });
   }
 
@@ -50,29 +53,30 @@ class _TeacherStudentsInfoState extends State<TeacherStudentsInfo> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Students Info'),
-            bottom: const TabBar(
-              tabs: <Widget>[
-                Tab(text: 'All Students'),
-                Tab(text: 'Not Enrolled'),
-                Tab(text: 'Top Students'),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            children: <Widget>[
-              Center(
-                child: getAllStudents(students),
-              ),
-              Center(
-                child: getAllStudents(notEnrolledStudents),
-              ),
-              Center(
-                child: getAllStudents(students),
-              ),
+        appBar: AppBar(
+          title: const Text('Students Info'),
+          bottom: const TabBar(
+            tabs: <Widget>[
+              Tab(text: 'All Students'),
+              Tab(text: 'Not Enrolled'),
+              Tab(text: 'Top Students'),
             ],
-          )),
+          ),
+        ),
+        body: TabBarView(
+          children: <Widget>[
+            Center(
+              child: getAllStudents(students),
+            ),
+            Center(
+              child: getAllStudents(notEnrolledStudents),
+            ),
+            Center(
+              child: getAllStudents(topStudents),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

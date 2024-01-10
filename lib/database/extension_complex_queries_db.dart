@@ -31,4 +31,20 @@ extension ComlexQueriesExtension on DatabaseHelper {
 
     return result.map((res) => Student.fromMap(res)).toList();
   }
+
+  Future<List<Student>> getStudentsWithAverageGradeHigherThanAverage() async {
+    final db = await database;
+
+    final List<Map<String, Object?>> result = await db.rawQuery('''
+      SELECT * FROM $_STUDENTS_TABLE S
+      WHERE
+            (SELECT AVG(CR.grade) FROM $_COURSES_RECORDS_TABLE CR 
+            WHERE CR.grade > 0 AND CR.studentEmail = S.email)
+            >
+            (SELECT AVG(CR.grade) FROM $_COURSES_RECORDS_TABLE CR 
+            WHERE CR.grade > 0)
+    ''');
+
+    return result.map((res) => Student.fromMap(res)).toList();
+  }
 }
